@@ -1,0 +1,1646 @@
+<!DOCTYPE html>
+<html lang="sr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nutribox | Appointment Setting Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --primary: #317039;
+  --primary-hover: #388041;
+  --primary-light: rgba(49, 112, 57, 0.1);
+  --primary-lighter: rgba(49, 112, 57, 0.05);
+  --dark: #101a24;
+  --text: #101a24;
+  --text-muted: rgba(16, 26, 36, 0.55);
+  --text-light: rgba(16, 26, 36, 0.35);
+  --bg: #ffffff;
+  --bg-secondary: #f8f8f8;
+  --border: rgba(16, 26, 36, 0.1);
+  --border-md: rgba(16, 26, 36, 0.18);
+  --danger: #f23849;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 1px 4px rgba(16,26,36,0.06), 0 2px 12px rgba(16,26,36,0.06);
+  --shadow-lg: 0 8px 32px rgba(16,26,36,0.12);
+}
+
+body {
+  font-family: 'Instrument Sans', sans-serif;
+  background: var(--bg-secondary);
+  color: var(--text);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ===== SCREENS ===== */
+.screen { display: none !important; }
+.screen.active { display: block !important; }
+#login-screen.active { display: flex !important; }
+
+/* ===== LOGIN ===== */
+#login-screen {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.login-card {
+  background: var(--bg);
+  border-radius: 20px;
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 420px;
+  box-shadow: var(--shadow-lg);
+}
+
+.login-brand {
+  text-align: center;
+  margin-bottom: 36px;
+}
+
+.login-logo {
+  font-size: 26px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+}
+
+.login-logo span {
+  color: var(--text);
+}
+
+.login-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+.login-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.login-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 20px 12px;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.login-btn:hover {
+  border-color: var(--primary);
+  background: var(--primary-lighter);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow);
+}
+
+.login-btn:active { transform: translateY(0); }
+
+.avatar {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  color: white;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+
+.login-btn .avatar { width: 52px; height: 52px; font-size: 20px; }
+
+.login-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.login-divider {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 4px 0 16px;
+}
+
+.login-divider::before, .login-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+}
+
+.login-divider span {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-light);
+}
+
+.login-admin-btn {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 14px 18px;
+  background: var(--dark);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: background 0.15s;
+  text-align: left;
+}
+
+.login-admin-btn:hover { background: #1a2a38; }
+
+.login-admin-btn .avatar { width: 40px; height: 40px; font-size: 15px; }
+.login-admin-btn .login-name { color: white; }
+.login-admin-info { flex: 1; }
+.login-admin-role { font-size: 11px; color: rgba(255,255,255,0.45); margin-top: 1px; }
+
+/* ===== PIN MODAL ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(16,26,36,0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 24px;
+  backdrop-filter: blur(4px);
+}
+
+.modal-overlay.hidden { display: none; }
+
+.modal-card {
+  background: var(--bg);
+  border-radius: 20px;
+  padding: 36px 32px;
+  width: 100%;
+  max-width: 320px;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-title {
+  font-size: 19px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.modal-sub {
+  font-size: 13px;
+  color: var(--text-muted);
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.pin-input {
+  width: 100%;
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: 14px;
+  padding: 14px;
+  border: 2px solid var(--border-md);
+  border-radius: var(--radius);
+  outline: none;
+  background: var(--bg-secondary);
+  color: var(--text);
+  font-family: inherit;
+  transition: border-color 0.15s;
+}
+
+.pin-input:focus { border-color: var(--primary); }
+.pin-input.error { border-color: var(--danger); animation: shake 0.3s ease; }
+
+@keyframes shake {
+  0%,100% { transform: translateX(0); }
+  25% { transform: translateX(-8px); }
+  75% { transform: translateX(8px); }
+}
+
+.pin-error {
+  font-size: 12px;
+  color: var(--danger);
+  text-align: center;
+  margin-top: 8px;
+  min-height: 18px;
+}
+
+.modal-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+/* ===== BUTTONS ===== */
+.btn {
+  padding: 12px 18px;
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  font-family: inherit;
+  line-height: 1;
+}
+
+.btn-primary { background: var(--primary); color: white; flex: 1; }
+.btn-primary:hover { background: var(--primary-hover); }
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-muted);
+  border: 1.5px solid var(--border-md);
+}
+.btn-secondary:hover { background: #efefef; }
+
+/* ===== APP HEADER ===== */
+.app-header {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  height: 58px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.header-brand { font-size: 16px; font-weight: 700; color: var(--primary); display: flex; align-items: center; }
+.header-brand em { color: var(--text-muted); font-style: normal; font-weight: 400; font-size: 13px; }
+
+.header-right { display: flex; align-items: center; gap: 12px; }
+
+.header-user { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+.header-avatar { width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: white; overflow: hidden; }
+.header-avatar img { width: 100%; height: 100%; object-fit: cover; }
+
+.btn-logout {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  background: transparent;
+  border: 1.5px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-family: inherit;
+}
+
+.btn-logout:hover { border-color: var(--danger); color: var(--danger); background: rgba(242,56,73,0.04); }
+
+/* ===== MAIN CONTENT ===== */
+.main-content {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 32px 24px;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.section-title { font-size: 17px; font-weight: 700; }
+
+.date-input {
+  padding: 8px 12px;
+  border: 1.5px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.date-input:focus { border-color: var(--primary); }
+
+/* ===== METRIC CARDS ===== */
+.metric-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.metric-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  padding: 20px 16px;
+  border: 1.5px solid var(--border);
+  transition: border-color 0.15s;
+}
+
+.metric-card:focus-within { border-color: var(--primary); }
+
+.metric-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.metric-input {
+  width: 100%;
+  border: none;
+  outline: none;
+  font-size: 34px;
+  font-weight: 700;
+  color: var(--text);
+  background: transparent;
+  font-family: inherit;
+}
+
+.metric-input::placeholder { color: rgba(16,26,36,0.18); }
+
+/* remove number input arrows */
+.metric-input::-webkit-outer-spin-button,
+.metric-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.metric-input[type=number] { -moz-appearance: textfield; }
+
+.conversion-bar {
+  background: var(--primary-light);
+  border: 1.5px solid rgba(49,112,57,0.2);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+
+.conversion-label { font-size: 13px; font-weight: 500; color: var(--primary); }
+.conversion-value { font-size: 22px; font-weight: 700; color: var(--primary); }
+
+.submit-row { display: flex; align-items: center; gap: 12px; }
+
+.btn-submit {
+  flex: 1;
+  padding: 14px 24px;
+  background: var(--primary);
+  color: white;
+  border: none;
+  border-radius: var(--radius-sm);
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.15s;
+}
+
+.btn-submit:hover { background: var(--primary-hover); }
+
+.submit-feedback {
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.submit-feedback.success { color: var(--primary); }
+.submit-feedback.error { color: var(--danger); }
+
+/* ===== LEADERBOARD ===== */
+.leaderboard-section { margin-top: 36px; }
+.leaderboard-title-row { margin-bottom: 12px; }
+
+.leaderboard-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+}
+
+.lb-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.lb-header-title { font-size: 13px; font-weight: 700; }
+.lb-header-sub { font-size: 11px; color: var(--text-light); }
+
+.lb-row {
+  display: flex;
+  align-items: center;
+  padding: 13px 18px;
+  gap: 12px;
+  border-bottom: 1px solid var(--border);
+  transition: background 0.1s;
+}
+
+.lb-row:last-child { border-bottom: none; }
+.lb-row.me { background: var(--primary-lighter); }
+.lb-row:hover { background: var(--bg-secondary); }
+.lb-row.me:hover { background: var(--primary-light); }
+
+.lb-rank { font-size: 18px; width: 28px; text-align: center; }
+.lb-name-wrap { flex: 1; }
+.lb-name { font-size: 14px; font-weight: 600; }
+.lb-you { font-size: 11px; color: var(--primary); font-weight: 600; margin-left: 5px; }
+.lb-meta { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+.lb-calls { font-size: 22px; font-weight: 700; color: var(--primary); }
+
+/* ===== ADMIN TABS ===== */
+.tab-bar {
+  background: var(--bg);
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  padding: 0 20px;
+  overflow-x: auto;
+}
+
+.tab-btn {
+  padding: 16px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.15s;
+  font-family: inherit;
+  margin-bottom: -1px;
+}
+
+.tab-btn:hover { color: var(--text); }
+.tab-btn.active { color: var(--primary); border-bottom-color: var(--primary); }
+
+.tab-pane { display: none; }
+.tab-pane.active { display: block; }
+
+/* ===== PREGLED ===== */
+.day-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+
+.day-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+}
+
+.day-card-head {
+  padding: 13px 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.day-card-name { font-size: 14px; font-weight: 700; flex: 1; }
+
+.badge {
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 100px;
+}
+
+.badge-pending { background: rgba(245,166,35,0.12); color: #c98a0a; }
+.badge-done { background: var(--primary-light); color: var(--primary); }
+
+.day-card-body { padding: 14px 16px; }
+
+.day-stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+  text-align: center;
+}
+
+.day-stat-val { font-size: 24px; font-weight: 700; }
+.day-stat-val.green { color: var(--primary); }
+.day-stat-lbl { font-size: 10px; color: var(--text-muted); font-weight: 500; margin-top: 1px; }
+
+.day-conv-row {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.day-conv-row strong { color: var(--primary); font-size: 14px; }
+
+.day-no-entry {
+  text-align: center;
+  padding: 18px 0;
+  font-size: 13px;
+  color: var(--text-light);
+}
+
+/* ===== GRAFICI ===== */
+.chart-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.select-input {
+  padding: 8px 12px;
+  border: 1.5px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  font-size: 13px;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  outline: none;
+  cursor: pointer;
+}
+
+.select-input:focus { border-color: var(--primary); }
+
+.range-btns { display: flex; gap: 4px; }
+
+.range-btn {
+  padding: 7px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  background: var(--bg);
+  border: 1.5px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+}
+
+.range-btn.active, .range-btn:hover {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.chart-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.chart-card-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.chart-canvas-wrap { position: relative; height: 200px; }
+
+/* ===== POREĐENJE ===== */
+.comp-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+}
+
+.comp-label { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+
+.table-wrap {
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  overflow: hidden;
+}
+
+table { width: 100%; border-collapse: collapse; }
+
+th {
+  padding: 11px 16px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  border-bottom: 1px solid var(--border);
+}
+
+td {
+  padding: 13px 16px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--border);
+}
+
+tr:last-child td { border-bottom: none; }
+.totals-row td { font-weight: 700; background: var(--primary-lighter); color: var(--primary); }
+
+.td-person { display: flex; align-items: center; gap: 9px; font-weight: 600; }
+.td-green { color: var(--primary); font-weight: 700; }
+
+/* ===== NEDELJNI IZVEŠTAJ ===== */
+.week-nav {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.week-nav-btn {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--bg);
+  border: 1.5px solid var(--border-md);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 16px;
+  transition: all 0.15s;
+  font-family: inherit;
+  color: var(--text);
+}
+
+.week-nav-btn:hover:not(:disabled) { border-color: var(--primary); color: var(--primary); }
+.week-nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+.week-range-label { font-size: 14px; font-weight: 600; flex: 1; }
+
+.week-card {
+  background: var(--bg);
+  border-radius: var(--radius);
+  border: 1.5px solid var(--border);
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.week-card-head {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.week-card-name { font-size: 15px; font-weight: 700; }
+
+.week-totals-row {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  border-bottom: 1px solid var(--border);
+}
+
+.week-total-cell {
+  padding: 14px;
+  text-align: center;
+  border-right: 1px solid var(--border);
+}
+
+.week-total-cell:last-child { border-right: none; }
+.week-total-val { font-size: 22px; font-weight: 700; }
+.week-total-val.green { color: var(--primary); }
+.week-total-lbl { font-size: 10px; color: var(--text-muted); font-weight: 500; margin-top: 3px; }
+
+.week-days-row {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+}
+
+.week-day-col { text-align: center; }
+.week-day-lbl { font-size: 10px; font-weight: 600; color: var(--text-light); text-transform: uppercase; margin-bottom: 6px; }
+.week-day-val { font-size: 18px; font-weight: 700; }
+.week-day-val.zero { color: var(--text-light); }
+.week-day-val.high { color: var(--primary); }
+.week-day-val.na { color: var(--text-light); font-size: 14px; }
+
+.week-analysis { padding: 16px 18px; }
+.analysis-head { font-size: 11px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; color: var(--text-light); margin-bottom: 10px; }
+.analysis-list { display: flex; flex-direction: column; gap: 7px; }
+.analysis-item { font-size: 13px; color: var(--text-muted); line-height: 1.45; }
+.analysis-item strong { color: var(--text); }
+
+.team-totals-card {
+  background: var(--primary);
+  border-radius: var(--radius);
+  padding: 24px;
+  margin-top: 4px;
+  color: white;
+}
+
+.team-totals-label { font-size: 11px; font-weight: 600; opacity: 0.6; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 16px; }
+
+.team-totals-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  text-align: center;
+}
+
+.team-total-val { font-size: 32px; font-weight: 700; }
+.team-total-lbl { font-size: 11px; opacity: 0.65; margin-top: 4px; font-weight: 500; }
+
+/* ===== RESPONSIVE ===== */
+@media (max-width: 560px) {
+  .metric-grid { grid-template-columns: 1fr; }
+  .week-totals-row { grid-template-columns: repeat(3, 1fr); }
+  .login-card { padding: 32px 24px; }
+  .day-cards { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ==============================
+     LOGIN
+=============================== -->
+<div id="login-screen" class="screen active">
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="assets/logo.png" alt="Nutribox" style="height:36px; width:auto; margin-bottom:8px;">
+      <div class="login-subtitle">Appointment Setting Tracker</div>
+    </div>
+
+    <div class="section-label">Tim</div>
+    <div class="login-grid">
+      <button type="button" class="login-btn" onclick="openPin('Andrija')">
+        <div class="avatar" style="background:#317039; width:52px; height:52px; font-size:20px">
+          <img src="assets/andrija.jpg" alt="Andrija">
+        </div>
+        <span class="login-name">Andrija</span>
+      </button>
+      <button type="button" class="login-btn" onclick="openPin('Tatjana')">
+        <div class="avatar" style="background:#388041; width:52px; height:52px; font-size:20px">T</div>
+        <span class="login-name">Tatjana</span>
+      </button>
+    </div>
+
+    <div class="login-divider"><span>Admin</span></div>
+
+    <button type="button" class="login-admin-btn" onclick="openPin('Vuksan')">
+      <img src="assets/vuksan.png" style="width:40px; height:40px; border-radius:50%; object-fit:cover; object-position: top;" alt="Vuksan">
+      <div class="login-admin-info">
+        <div class="login-name">Vuksan</div>
+        <div class="login-admin-role">Administrator</div>
+      </div>
+    </button>
+  </div>
+</div>
+
+<!-- ==============================
+     SETTER SCREEN
+=============================== -->
+<div id="setter-screen" class="screen">
+  <header class="app-header">
+    <div class="header-brand">
+      <img src="assets/logo.png" alt="Nutribox" style="height:22px; width:auto; vertical-align:middle; margin-right:6px;">
+      <em>Appointment Setting Tracker</em>
+    </div>
+    <div class="header-right">
+      <div class="header-user">
+        <div class="header-avatar" id="setter-header-avatar"></div>
+        <span id="setter-header-name"></span>
+      </div>
+      <button type="button" class="btn-logout" onclick="logout()">Odjava</button>
+    </div>
+  </header>
+
+  <div class="main-content">
+    <div class="section-header">
+      <div class="section-title">Dnevni unos</div>
+      <input type="date" class="date-input" id="setter-date" onchange="onDateChange()">
+    </div>
+
+    <div class="metric-grid">
+      <div class="metric-card">
+        <div class="metric-label">Conversations</div>
+        <input type="number" class="metric-input" id="inp-conversations" placeholder="0" min="0" oninput="updateConvRate()">
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Follow Ups</div>
+        <input type="number" class="metric-input" id="inp-follow-ups" placeholder="0" min="0">
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Booked Calls</div>
+        <input type="number" class="metric-input" id="inp-booked-calls" placeholder="0" min="0" oninput="updateConvRate()">
+      </div>
+    </div>
+
+    <div class="conversion-bar">
+      <span class="conversion-label">Conversion Rate</span>
+      <span class="conversion-value" id="conv-rate-display">0%</span>
+    </div>
+
+    <div class="submit-row">
+      <button type="button" class="btn-submit" onclick="submitEntry()">Sačuvaj unos</button>
+      <span class="submit-feedback" id="submit-feedback"></span>
+    </div>
+
+    <div class="leaderboard-section">
+      <div class="section-header leaderboard-title-row" style="margin-bottom:12px;">
+        <div class="section-title" style="font-size:15px;">Leaderboard</div>
+      </div>
+      <div class="leaderboard-card" id="setter-leaderboard"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==============================
+     ADMIN SCREEN
+=============================== -->
+<div id="admin-screen" class="screen">
+  <header class="app-header">
+    <div class="header-brand">
+      <img src="assets/logo.png" alt="Nutribox" style="height:22px; width:auto; vertical-align:middle; margin-right:6px;">
+      <em>Admin Panel</em>
+    </div>
+    <div class="header-right">
+      <div class="header-user">
+        <div class="header-avatar" id="admin-header-avatar" style="background:#101a24">
+          <img src="assets/vuksan.png" style="width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%;">
+        </div>
+        <span>Vuksan</span>
+      </div>
+      <button type="button" class="btn-logout" onclick="logout()">Odjava</button>
+    </div>
+  </header>
+
+  <div class="tab-bar">
+    <button type="button" class="tab-btn active" onclick="switchTab('pregled', this)">Pregled</button>
+    <button type="button" class="tab-btn" onclick="switchTab('grafici', this)">Grafici</button>
+    <button type="button" class="tab-btn" onclick="switchTab('poredenje', this)">Poređenje</button>
+    <button type="button" class="tab-btn" onclick="switchTab('nedeljni', this)">Nedeljni Izveštaj</button>
+  </div>
+
+  <!-- PREGLED -->
+  <div id="tab-pregled" class="tab-pane active">
+    <div class="main-content">
+      <div class="section-header">
+        <div class="section-title">Pregled dana</div>
+        <input type="date" class="date-input" id="pregled-date" onchange="renderPregled()">
+      </div>
+      <div class="day-cards" id="pregled-cards"></div>
+    </div>
+  </div>
+
+  <!-- GRAFICI -->
+  <div id="tab-grafici" class="tab-pane">
+    <div class="main-content">
+      <div class="chart-controls">
+        <select class="select-input" id="chart-metric" onchange="renderCharts()">
+          <option value="booked_calls">Booked Calls</option>
+          <option value="conversations">Conversations</option>
+          <option value="follow_ups">Follow Ups</option>
+          <option value="conversion_rate">Conversion Rate (%)</option>
+        </select>
+        <span class="comp-label">Od</span>
+        <input type="date" class="date-input" id="chart-from" onchange="renderCharts()">
+        <span class="comp-label">Do</span>
+        <input type="date" class="date-input" id="chart-to" onchange="renderCharts()">
+      </div>
+      <div id="charts-container"></div>
+    </div>
+  </div>
+
+  <!-- POREĐENJE -->
+  <div id="tab-poredenje" class="tab-pane">
+    <div class="main-content">
+      <div class="comp-controls">
+        <span class="comp-label">Od</span>
+        <input type="date" class="date-input" id="comp-from" onchange="renderComp()">
+        <span class="comp-label">Do</span>
+        <input type="date" class="date-input" id="comp-to" onchange="renderComp()">
+      </div>
+      <div class="table-wrap">
+        <table id="comp-table"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- NEDELJNI IZVEŠTAJ -->
+  <div id="tab-nedeljni" class="tab-pane">
+    <div class="main-content">
+      <div class="week-nav">
+        <button type="button" class="week-nav-btn" onclick="shiftWeek(-1)">←</button>
+        <div class="week-range-label" id="week-range-label"></div>
+        <button type="button" class="week-nav-btn" id="week-next-btn" onclick="shiftWeek(1)">→</button>
+      </div>
+      <div id="weekly-content"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ==============================
+     PIN MODAL
+=============================== -->
+<div class="modal-overlay hidden" id="pin-modal">
+  <div class="modal-card">
+    <div class="modal-title" id="pin-modal-title">Unesi PIN</div>
+    <div class="modal-sub">Upiši svoj 4-cifreni PIN da bi nastavio</div>
+    <input type="password" class="pin-input" id="pin-input" maxlength="4" placeholder="••••"
+           oninput="clearPinError()"
+           onkeydown="if(event.key==='Enter') confirmPin()">
+    <div class="pin-error" id="pin-error"></div>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" onclick="closePin()">Otkaži</button>
+      <button type="button" class="btn btn-primary" onclick="confirmPin()">Prijava</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============================================================
+// SUPABASE
+// ============================================================
+const SUPABASE_URL = 'https://lkukoewqzxmztlvarnvw.supabase.co';
+const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxrdWtvZXdxenhtenRsdmFybnZ3Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ3MDMxMjUsImV4cCI6MjA5MDI3OTEyNX0.CPrmMxuQmPgyAAcHXyBQSI7J4FQnc8yKkANCBtbXNy4';
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// ============================================================
+// CONFIG
+// ============================================================
+const USERS = [
+  { name: 'Andrija', pin: '2222', role: 'setter', color: '#317039', photo: 'assets/andrija.jpg' },
+  { name: 'Tatjana', pin: '1111', role: 'setter', color: '#388041', photo: null },
+  { name: 'Vuksan',  pin: '0000', role: 'admin',  color: '#101a24', photo: 'assets/vuksan.png' }
+];
+
+const SETTERS = USERS.filter(u => u.role === 'setter');
+const SETTER_NAMES = SETTERS.map(s => s.name);
+const DAY_SHORT = ['Pon', 'Uto', 'Sre', 'Čet', 'Pet', 'Sub', 'Ned'];
+
+// Avatar HTML helper
+function avatarHtml(user, size = 32, fontSize = 13) {
+  if (user.photo) {
+    return `<div class="avatar" style="background:${user.color}; width:${size}px; height:${size}px;">
+      <img src="${user.photo}" alt="${user.name}" style="width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%;">
+    </div>`;
+  }
+  return `<div class="avatar" style="background:${user.color}; width:${size}px; height:${size}px; font-size:${fontSize}px;">${user.name[0]}</div>`;
+}
+
+// ============================================================
+// STATE
+// ============================================================
+let currentUser = null;
+let pendingUser = null;
+let weekOffset  = 0;
+let chartRefs   = {};
+
+// ============================================================
+// SUPABASE STORAGE (async)
+// ============================================================
+async function saveEntry(name, date, data) {
+  const { error } = await sb.from('entries').upsert(
+    { user_name: name, date, ...data, saved_at: new Date().toISOString() },
+    { onConflict: 'user_name,date' }
+  );
+  if (error) throw error;
+}
+
+async function getEntry(name, date) {
+  const { data, error } = await sb.from('entries')
+    .select('*').eq('user_name', name).eq('date', date).maybeSingle();
+  if (error) throw error;
+  return data;
+}
+
+// Fetch entries for one setter in a date range
+async function getRange(name, from, to) {
+  const { data, error } = await sb.from('entries')
+    .select('*').eq('user_name', name).gte('date', from).lte('date', to).order('date');
+  if (error) throw error;
+  return data || [];
+}
+
+// Fetch entries for ALL setters in a date range (one query)
+async function getAllInRange(from, to) {
+  const { data, error } = await sb.from('entries')
+    .select('*').in('user_name', SETTER_NAMES).gte('date', from).lte('date', to).order('date');
+  if (error) throw error;
+  return data || [];
+}
+
+// Group entries array by user_name
+function byUser(entries) {
+  const map = {};
+  SETTERS.forEach(s => { map[s.name] = []; });
+  entries.forEach(e => { if (map[e.user_name]) map[e.user_name].push(e); });
+  return map;
+}
+
+// ============================================================
+// DATE HELPERS
+// ============================================================
+const toISO = d => d.toISOString().split('T')[0];
+
+function todayISO() { return toISO(new Date()); }
+
+function yesterdayISO() {
+  const d = new Date(); d.setDate(d.getDate() - 1); return toISO(d);
+}
+
+function subtractDays(iso, n) {
+  const d = new Date(iso); d.setDate(d.getDate() - n); return toISO(d);
+}
+
+function fmt(iso) {
+  if (!iso) return '';
+  const [y, m, d] = iso.split('-');
+  return `${d}.${m}.${y}`;
+}
+
+function getWeek(offset = 0) {
+  const base = new Date();
+  base.setDate(base.getDate() + offset * 7);
+  const dow = base.getDay();
+  const diff = dow === 0 ? -6 : 1 - dow;
+  const mon = new Date(base);
+  mon.setDate(base.getDate() + diff);
+  const days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date(mon); d.setDate(mon.getDate() + i); return toISO(d);
+  });
+  return { from: days[0], to: days[6], days };
+}
+
+// ============================================================
+// AUTH
+// ============================================================
+function openPin(name) {
+  pendingUser = name;
+  document.getElementById('pin-modal-title').textContent = `Zdravo, ${name}!`;
+  document.getElementById('pin-input').value = '';
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('pin-input').classList.remove('error');
+  document.getElementById('pin-modal').classList.remove('hidden');
+  setTimeout(() => document.getElementById('pin-input').focus(), 80);
+}
+
+function closePin() {
+  document.getElementById('pin-modal').classList.add('hidden');
+  pendingUser = null;
+}
+
+function clearPinError() {
+  document.getElementById('pin-error').textContent = '';
+  document.getElementById('pin-input').classList.remove('error');
+}
+
+function confirmPin() {
+  const pin = document.getElementById('pin-input').value;
+  const user = USERS.find(u => u.name === pendingUser);
+  if (!user || pin !== user.pin) {
+    document.getElementById('pin-error').textContent = 'Pogrešan PIN. Pokušaj ponovo.';
+    document.getElementById('pin-input').classList.add('error');
+    document.getElementById('pin-input').value = '';
+    return;
+  }
+  closePin();
+  login(user);
+}
+
+function login(user) {
+  currentUser = user;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  if (user.role === 'admin') {
+    initAdminScreen();
+    document.getElementById('admin-screen').classList.add('active');
+  } else {
+    initSetterScreen();
+    document.getElementById('setter-screen').classList.add('active');
+  }
+}
+
+function logout() {
+  currentUser = null;
+  weekOffset = 0;
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('login-screen').classList.add('active');
+}
+
+// ============================================================
+// SETTER SCREEN
+// ============================================================
+function initSetterScreen() {
+  // Header
+  const av = document.getElementById('setter-header-avatar');
+  av.style.background = currentUser.color;
+  if (currentUser.photo) {
+    av.innerHTML = `<img src="${currentUser.photo}" style="width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%;">`;
+  } else {
+    av.textContent = currentUser.name[0];
+  }
+  document.getElementById('setter-header-name').textContent = currentUser.name;
+
+  // Date
+  const di = document.getElementById('setter-date');
+  di.value = todayISO();
+  di.max = todayISO();
+
+  loadFormForDate();
+  renderLeaderboard();
+}
+
+function onDateChange() {
+  loadFormForDate();
+}
+
+async function loadFormForDate() {
+  const date = document.getElementById('setter-date').value;
+  const fb = document.getElementById('submit-feedback');
+  fb.textContent = 'Učitavanje...';
+  fb.className = 'submit-feedback';
+
+  try {
+    const entry = await getEntry(currentUser.name, date);
+    document.getElementById('inp-conversations').value = entry ? (entry.conversations ?? '') : '';
+    document.getElementById('inp-follow-ups').value    = entry ? (entry.follow_ups    ?? '') : '';
+    document.getElementById('inp-booked-calls').value  = entry ? (entry.booked_calls  ?? '') : '';
+    updateConvRate();
+
+    if (entry) {
+      const t = new Date(entry.saved_at);
+      fb.textContent = `Poslednji unos: ${t.toLocaleTimeString('sr', { hour: '2-digit', minute: '2-digit' })}`;
+      fb.className = 'submit-feedback success';
+    } else {
+      fb.textContent = '';
+      fb.className = 'submit-feedback';
+    }
+  } catch (err) {
+    fb.textContent = 'Greška pri učitavanju.';
+    fb.className = 'submit-feedback error';
+  }
+}
+
+function updateConvRate() {
+  const c = parseInt(document.getElementById('inp-conversations').value) || 0;
+  const b = parseInt(document.getElementById('inp-booked-calls').value)  || 0;
+  const rate = c > 0 ? Math.round((b / c) * 100) : 0;
+  document.getElementById('conv-rate-display').textContent = `${rate}%`;
+}
+
+async function submitEntry() {
+  const date            = document.getElementById('setter-date').value;
+  const conversations   = parseInt(document.getElementById('inp-conversations').value) || 0;
+  const follow_ups      = parseInt(document.getElementById('inp-follow-ups').value)    || 0;
+  const booked_calls    = parseInt(document.getElementById('inp-booked-calls').value)  || 0;
+  const conversion_rate = conversations > 0 ? Math.round((booked_calls / conversations) * 100) : 0;
+
+  const fb = document.getElementById('submit-feedback');
+  fb.textContent = 'Čuvanje...';
+  fb.className = 'submit-feedback';
+
+  try {
+    await saveEntry(currentUser.name, date, { conversations, follow_ups, booked_calls, conversion_rate });
+    fb.textContent = '✓ Sačuvano!';
+    fb.className = 'submit-feedback success';
+    setTimeout(() => { fb.textContent = ''; fb.className = 'submit-feedback'; }, 3000);
+    renderLeaderboard();
+  } catch (err) {
+    fb.textContent = '✗ Greška pri čuvanju.';
+    fb.className = 'submit-feedback error';
+  }
+}
+
+async function renderLeaderboard() {
+  const { from, to } = getWeek(0);
+  const container = document.getElementById('setter-leaderboard');
+  container.innerHTML = `<div class="lb-header"><span class="lb-header-title">Učitavanje...</span></div>`;
+
+  try {
+    const all = await getAllInRange(from, to);
+    const grouped = byUser(all);
+
+    const rows = SETTERS.map(s => {
+      const entries = grouped[s.name] || [];
+      const booked  = entries.reduce((a, e) => a + (e.booked_calls  || 0), 0);
+      const conv    = entries.reduce((a, e) => a + (e.conversations || 0), 0);
+      const rate    = conv > 0 ? Math.round((booked / conv) * 100) : 0;
+      return { ...s, booked, conv, rate };
+    }).sort((a, b) => b.booked - a.booked);
+
+    const icons = ['🥇', '🥈', '🥉'];
+    let html = `
+      <div class="lb-header">
+        <span class="lb-header-title">Ova nedelja</span>
+        <span class="lb-header-sub">${fmt(from)} – ${fmt(to)}</span>
+      </div>
+    `;
+    rows.forEach((s, i) => {
+      const me = currentUser && s.name === currentUser.name;
+      html += `
+        <div class="lb-row ${me ? 'me' : ''}">
+          <div class="lb-rank">${icons[i] || i + 1}</div>
+          ${avatarHtml(s, 32, 13)}
+          <div class="lb-name-wrap">
+            <div class="lb-name">${s.name}${me ? '<span class="lb-you">(ti)</span>' : ''}</div>
+            <div class="lb-meta">Conv: ${s.conv} · Rate: ${s.rate}%</div>
+          </div>
+          <div class="lb-calls">${s.booked}</div>
+        </div>
+      `;
+    });
+    container.innerHTML = html;
+  } catch (err) {
+    container.innerHTML = `<div style="padding:20px;text-align:center;color:var(--danger);font-size:13px;">Greška pri učitavanju leaderboard-a.</div>`;
+  }
+}
+
+// ============================================================
+// ADMIN SCREEN
+// ============================================================
+function initAdminScreen() {
+  // Avatar is already set via HTML img tag
+
+  // Default dates
+  document.getElementById('pregled-date').value = yesterdayISO();
+  const { from } = getWeek(0);
+  document.getElementById('comp-from').value  = from;
+  document.getElementById('comp-to').value    = todayISO();
+  document.getElementById('chart-from').value = subtractDays(todayISO(), 6);
+  document.getElementById('chart-to').value   = todayISO();
+
+  renderPregled();
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  document.getElementById(`tab-${id}`).classList.add('active');
+
+  if (id === 'grafici')   renderCharts();
+  if (id === 'poredenje') renderComp();
+  if (id === 'nedeljni')  renderWeekly();
+}
+
+// ---- PREGLED ----
+async function renderPregled() {
+  const date = document.getElementById('pregled-date').value;
+  document.getElementById('pregled-cards').innerHTML = `<div style="padding:24px;color:var(--text-muted);font-size:13px;">Učitavanje...</div>`;
+
+  try {
+    const all     = await getAllInRange(date, date);
+    const grouped = byUser(all);
+    let html = '';
+
+    SETTERS.forEach(s => {
+      const e    = (grouped[s.name] || [])[0] || null;
+      const rate = e && e.conversations > 0 ? Math.round((e.booked_calls / e.conversations) * 100) : 0;
+      html += `
+        <div class="day-card">
+          <div class="day-card-head">
+            ${avatarHtml(s, 30, 12)}
+            <div class="day-card-name">${s.name}</div>
+            <span class="badge ${e ? 'badge-done' : 'badge-pending'}">${e ? 'Unet' : 'Čeka se'}</span>
+          </div>
+          <div class="day-card-body">
+            ${e ? `
+              <div class="day-stats-row">
+                <div><div class="day-stat-val">${e.conversations}</div><div class="day-stat-lbl">Conversations</div></div>
+                <div><div class="day-stat-val">${e.follow_ups}</div><div class="day-stat-lbl">Follow Ups</div></div>
+                <div><div class="day-stat-val green">${e.booked_calls}</div><div class="day-stat-lbl">Booked Calls</div></div>
+              </div>
+              <div class="day-conv-row">Conversion Rate: <strong>${rate}%</strong></div>
+            ` : `<div class="day-no-entry">Nije unet unos za ovaj dan</div>`}
+          </div>
+        </div>
+      `;
+    });
+    document.getElementById('pregled-cards').innerHTML = html;
+  } catch (err) {
+    document.getElementById('pregled-cards').innerHTML = `<div style="padding:24px;color:var(--danger);font-size:13px;">Greška pri učitavanju.</div>`;
+  }
+}
+
+// ---- GRAFICI ----
+async function renderCharts() {
+  const metric = document.getElementById('chart-metric').value;
+  const metricLabels = { booked_calls: 'Booked Calls', conversations: 'Conversations', follow_ups: 'Follow Ups', conversion_rate: 'Conversion Rate (%)' };
+  const from = document.getElementById('chart-from').value;
+  const to   = document.getElementById('chart-to').value;
+  if (!from || !to) return;
+
+  const container = document.getElementById('charts-container');
+  container.innerHTML = `<div style="padding:24px;color:var(--text-muted);font-size:13px;">Učitavanje...</div>`;
+
+  try {
+    const dates = [];
+    const cur = new Date(from);
+    while (toISO(cur) <= to) { dates.push(toISO(cur)); cur.setDate(cur.getDate() + 1); }
+
+    const all     = await getAllInRange(from, to);
+    const grouped = byUser(all);
+    container.innerHTML = '';
+
+    SETTERS.forEach(s => {
+      const entryMap = Object.fromEntries((grouped[s.name] || []).map(e => [e.date, e]));
+      const values   = dates.map(d => entryMap[d] ? (entryMap[d][metric] ?? null) : null);
+      const id       = `chart-${s.name}`;
+
+      const card = document.createElement('div');
+      card.className = 'chart-card';
+      card.innerHTML = `
+        <div class="chart-card-title">${avatarHtml(s, 22, 9)} ${s.name} — ${metricLabels[metric]}</div>
+        <div class="chart-canvas-wrap"><canvas id="${id}"></canvas></div>
+      `;
+      container.appendChild(card);
+
+      if (chartRefs[id]) chartRefs[id].destroy();
+      chartRefs[id] = new Chart(document.getElementById(id).getContext('2d'), {
+        type: 'line',
+        data: {
+          labels: dates.map(fmt),
+          datasets: [{ data: values, borderColor: s.color, backgroundColor: s.color + '18', borderWidth: 2, pointRadius: 4, pointBackgroundColor: s.color, tension: 0.3, fill: true, spanGaps: false }]
+        },
+        options: {
+          responsive: true, maintainAspectRatio: false,
+          plugins: { legend: { display: false } },
+          scales: {
+            x: { grid: { color: 'rgba(16,26,36,0.06)' }, ticks: { font: { size: 11 }, color: '#aaa' } },
+            y: { beginAtZero: true, grid: { color: 'rgba(16,26,36,0.06)' }, ticks: { font: { size: 11 }, color: '#aaa' } }
+          }
+        }
+      });
+    });
+  } catch (err) {
+    container.innerHTML = `<div style="padding:24px;color:var(--danger);font-size:13px;">Greška pri učitavanju grafika.</div>`;
+  }
+}
+
+// ---- POREĐENJE ----
+async function renderComp() {
+  const from = document.getElementById('comp-from').value;
+  const to   = document.getElementById('comp-to').value;
+  if (!from || !to) return;
+
+  document.getElementById('comp-table').innerHTML = `<tr><td style="padding:24px;color:var(--text-muted);font-size:13px;">Učitavanje...</td></tr>`;
+
+  try {
+    const all     = await getAllInRange(from, to);
+    const grouped = byUser(all);
+
+    const stats = SETTERS.map(s => {
+      const entries = grouped[s.name] || [];
+      const conv    = entries.reduce((a, e) => a + (e.conversations || 0), 0);
+      const fu      = entries.reduce((a, e) => a + (e.follow_ups    || 0), 0);
+      const booked  = entries.reduce((a, e) => a + (e.booked_calls  || 0), 0);
+      const rate    = conv > 0 ? Math.round((booked / conv) * 100) : 0;
+      return { s, conv, fu, booked, rate, days: entries.length };
+    });
+
+    const totalConv   = stats.reduce((a, r) => a + r.conv,   0);
+    const totalFu     = stats.reduce((a, r) => a + r.fu,     0);
+    const totalBooked = stats.reduce((a, r) => a + r.booked, 0);
+    const totalRate   = totalConv > 0 ? Math.round((totalBooked / totalConv) * 100) : 0;
+
+    let html = `<thead><tr><th>Setter</th><th>Conversations</th><th>Follow Ups</th><th>Booked Calls</th><th>Conversion</th><th>Dana</th></tr></thead><tbody>`;
+    stats.forEach(({ s, conv, fu, booked, rate, days }) => {
+      html += `<tr>
+        <td class="td-person">${avatarHtml(s, 26, 10)} ${s.name}</td>
+        <td>${conv}</td><td>${fu}</td><td class="td-green">${booked}</td><td>${rate}%</td><td>${days}</td>
+      </tr>`;
+    });
+    html += `<tr class="totals-row"><td>Ukupno</td><td>${totalConv}</td><td>${totalFu}</td><td>${totalBooked}</td><td>${totalRate}%</td><td>—</td></tr></tbody>`;
+    document.getElementById('comp-table').innerHTML = html;
+  } catch (err) {
+    document.getElementById('comp-table').innerHTML = `<tr><td style="padding:24px;color:var(--danger);font-size:13px;">Greška pri učitavanju.</td></tr>`;
+  }
+}
+
+// ---- NEDELJNI IZVEŠTAJ ----
+function shiftWeek(dir) {
+  weekOffset += dir;
+  if (weekOffset > 0) weekOffset = 0;
+  renderWeekly();
+}
+
+async function renderWeekly() {
+  const week     = getWeek(weekOffset);
+  const prevWeek = getWeek(weekOffset - 1);
+  const today    = todayISO();
+
+  document.getElementById('week-range-label').textContent = `${fmt(week.from)} – ${fmt(week.to)}`;
+  document.getElementById('week-next-btn').disabled = weekOffset >= 0;
+  document.getElementById('weekly-content').innerHTML = `<div style="padding:24px;color:var(--text-muted);font-size:13px;">Učitavanje...</div>`;
+
+  try {
+    const [currAll, prevAll] = await Promise.all([
+      getAllInRange(week.from, week.to),
+      getAllInRange(prevWeek.from, prevWeek.to)
+    ]);
+    const currGrouped = byUser(currAll);
+    const prevGrouped = byUser(prevAll);
+
+  let html = '';
+  const teamTot = { conv: 0, booked: 0 };
+
+  SETTERS.forEach(s => {
+    const entries     = currGrouped[s.name] || [];
+    const entryMap    = Object.fromEntries(entries.map(e => [e.date, e]));
+    const prevEntries = prevGrouped[s.name] || [];
+
+    const totalConv   = entries.reduce((a, e) => a + (e.conversations || 0), 0);
+    const totalFu     = entries.reduce((a, e) => a + (e.follow_ups    || 0), 0);
+    const totalBooked = entries.reduce((a, e) => a + (e.booked_calls  || 0), 0);
+    const avgRate     = totalConv > 0 ? Math.round((totalBooked / totalConv) * 100) : 0;
+    const prevBooked  = prevEntries.reduce((a, e) => a + (e.booked_calls || 0), 0);
+
+    teamTot.conv   += totalConv;
+    teamTot.booked += totalBooked;
+
+    // Days grid
+    let daysHtml = '';
+    week.days.forEach((date, i) => {
+      const e       = entryMap[date];
+      const future  = date > today;
+      const weekend = i >= 5;
+      let valHtml;
+
+      if (future) {
+        valHtml = `<div class="week-day-val na">—</div>`;
+      } else if (!e) {
+        valHtml = `<div class="week-day-val na">?</div>`;
+      } else {
+        const v = e.booked_calls || 0;
+        const cls = v === 0 ? 'zero' : v >= 3 ? 'high' : '';
+        valHtml = `<div class="week-day-val ${cls}">${v}</div>`;
+      }
+
+      daysHtml += `
+        <div class="week-day-col" style="${weekend ? 'opacity:.45' : ''}">
+          <div class="week-day-lbl">${DAY_SHORT[i]}</div>
+          ${valHtml}
+        </div>
+      `;
+    });
+
+    // Analysis
+    const notes = [];
+
+    // Week over week
+    if (prevBooked > 0) {
+      const diff = totalBooked - prevBooked;
+      const pct  = Math.round((Math.abs(diff) / prevBooked) * 100);
+      if (diff > 0)      notes.push(`📈 <strong>+${pct}%</strong> booked calls vs prošle nedelje (${prevBooked} → ${totalBooked})`);
+      else if (diff < 0) notes.push(`📉 <strong>−${pct}%</strong> booked calls vs prošle nedelje (${prevBooked} → ${totalBooked})`);
+      else               notes.push(`↔️ Isti broj booked calls kao prošle nedelje (${totalBooked})`);
+    }
+
+    // Drops & recoveries (workdays)
+    const workdays = week.days.slice(0, 5);
+    let drops = 0, recoveries = 0;
+    const missing = [];
+
+    workdays.forEach((date, i) => {
+      const e = entryMap[date];
+      if (!e && date < today) { missing.push(DAY_SHORT[i]); return; }
+      if (i > 0 && e) {
+        const prev = entryMap[workdays[i - 1]];
+        if (prev && prev.booked_calls > 0 && e.booked_calls === 0) drops++;
+        if (prev && prev.booked_calls === 0 && e.booked_calls > 0) recoveries++;
+      }
+    });
+
+    if (drops > 0)       notes.push(`🔴 ${drops} nagl${drops === 1 ? 'i pad' : 'a pada'} na 0 booked calls`);
+    if (recoveries > 0)  notes.push(`🔄 ${recoveries} oporavl${recoveries === 1 ? 'janje' : 'janja'} nakon pada`);
+    if (missing.length)  notes.push(`⚠️ Nedostaju unosi: ${missing.join(', ')}`);
+
+    // Best day
+    const withData = entries.filter(e => e.conversations >= 3 && e.conversion_rate >= 30);
+    if (withData.length) {
+      const best = withData.reduce((b, e) => e.conversion_rate > b.conversion_rate ? e : b);
+      notes.push(`⭐ Najbolji dan: ${fmt(best.date)} — ${best.conversion_rate}% conversion (${best.booked_calls}/${best.conversations})`);
+    }
+
+    if (!notes.length) {
+      notes.push(totalBooked === 0
+        ? `📊 Nema unetih booked calls za ovu nedelju`
+        : `📊 Solidan nastup ove nedelje`);
+    }
+
+    html += `
+      <div class="week-card">
+        <div class="week-card-head">
+          ${avatarHtml(s, 34, 13)}
+          <div class="week-card-name">${s.name}</div>
+        </div>
+        <div class="week-totals-row">
+          <div class="week-total-cell">
+            <div class="week-total-val">${totalConv}</div>
+            <div class="week-total-lbl">Conversations</div>
+          </div>
+          <div class="week-total-cell">
+            <div class="week-total-val">${totalFu}</div>
+            <div class="week-total-lbl">Follow Ups</div>
+          </div>
+          <div class="week-total-cell">
+            <div class="week-total-val green">${totalBooked}</div>
+            <div class="week-total-lbl">Booked Calls</div>
+          </div>
+          <div class="week-total-cell">
+            <div class="week-total-val">${avgRate}%</div>
+            <div class="week-total-lbl">Avg Conversion</div>
+          </div>
+          <div class="week-total-cell">
+            <div class="week-total-val">${entries.length}</div>
+            <div class="week-total-lbl">Dana unetih</div>
+          </div>
+        </div>
+        <div class="week-days-row">${daysHtml}</div>
+        <div class="week-analysis">
+          <div class="analysis-head">Analiza</div>
+          <div class="analysis-list">
+            ${notes.map(n => `<div class="analysis-item">${n}</div>`).join('')}
+          </div>
+        </div>
+      </div>
+    `;
+  });
+
+  // Team totals
+  const teamRate = teamTot.conv > 0 ? Math.round((teamTot.booked / teamTot.conv) * 100) : 0;
+  html += `
+    <div class="team-totals-card">
+      <div class="team-totals-label">Tim ukupno</div>
+      <div class="team-totals-row">
+        <div>
+          <div class="team-total-val">${teamTot.conv}</div>
+          <div class="team-total-lbl">Conversations</div>
+        </div>
+        <div>
+          <div class="team-total-val">${teamTot.booked}</div>
+          <div class="team-total-lbl">Booked Calls</div>
+        </div>
+        <div>
+          <div class="team-total-val">${teamRate}%</div>
+          <div class="team-total-lbl">Avg Conversion</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('weekly-content').innerHTML = html;
+  } catch (err) {
+    document.getElementById('weekly-content').innerHTML = `<div style="padding:24px;color:var(--danger);font-size:13px;">Greška pri učitavanju izveštaja.</div>`;
+  }
+}
+
+// ============================================================
+// INIT
+// ============================================================
+document.getElementById('setter-date').max = todayISO();
+</script>
+</body>
+</html>
