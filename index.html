@@ -433,6 +433,21 @@ body {
 
 .btn-submit:hover { background: var(--primary-hover); }
 
+.btn-delete {
+  padding: 14px 16px;
+  background: transparent;
+  color: var(--danger);
+  border: 1.5px solid rgba(242,56,73,0.3);
+  border-radius: var(--radius-sm);
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.btn-delete:hover { background: rgba(242,56,73,0.06); border-color: var(--danger); }
+
 .submit-feedback {
   font-size: 13px;
   font-weight: 500;
@@ -901,6 +916,7 @@ tr:last-child td { border-bottom: none; }
 
     <div class="submit-row">
       <button type="button" class="btn-submit" onclick="submitEntry()">Sačuvaj unos</button>
+      <button type="button" class="btn-delete" id="btn-delete-entry" style="display:none" onclick="deleteCurrentEntry()">Obriši</button>
       <span class="submit-feedback" id="submit-feedback"></span>
     </div>
 
@@ -1066,6 +1082,12 @@ async function saveEntry(name, date, data) {
   if (error) throw error;
 }
 
+async function deleteEntry(name, date) {
+  const { error } = await sb.from('entries')
+    .delete().eq('user_name', name).eq('date', date);
+  if (error) throw error;
+}
+
 async function getEntry(name, date) {
   const { data, error } = await sb.from('entries')
     .select('*').eq('user_name', name).eq('date', date).maybeSingle();
@@ -1226,13 +1248,16 @@ async function loadFormForDate() {
     document.getElementById('inp-booked-calls').value  = entry ? (entry.booked_calls  ?? '') : '';
     updateConvRate();
 
+    const deleteBtn = document.getElementById('btn-delete-entry');
     if (entry) {
       const t = new Date(entry.saved_at);
       fb.textContent = `Poslednji unos: ${t.toLocaleTimeString('sr', { hour: '2-digit', minute: '2-digit' })}`;
       fb.className = 'submit-feedback success';
+      deleteBtn.style.display = 'block';
     } else {
       fb.textContent = '';
       fb.className = 'submit-feedback';
+      deleteBtn.style.display = 'none';
     }
   } catch (err) {
     fb.textContent = 'Greška pri učitavanju.';
@@ -1245,6 +1270,41 @@ function updateConvRate() {
   const b = parseInt(document.getElementById('inp-booked-calls').value)  || 0;
   const rate = c > 0 ? Math.round((b / c) * 100) : 0;
   document.getElementById('conv-rate-display').textContent = `${rate}%`;
+}
+
+async function deleteCurrentEntry() {
+  const date = document.getElementById('setter-date').value;
+  if (!confirm(`Obrisati unos za ${fmt(date)}? Ova akcija se ne može poništiti.`)) return;
+
+  const fb = document.getElementById('submit-feedback');
+  fb.textContent = 'Brisanje...';
+  fb.className = 'submit-feedback';
+
+  try {
+    await deleteEntry(currentUser.name, date);
+    document.getElementById('inp-conversations').value = '';
+    document.getElementById('inp-follow-ups').value    = '';
+    document.getElementById('inp-booked-calls').value  = '';
+    updateConvRate();
+    document.getElementById('btn-delete-entry').style.display = 'none';
+    fb.textContent = '✓ Unos obrisan.';
+    fb.className = 'submit-feedback success';
+    setTimeout(() => { fb.textContent = ''; fb.className = 'submit-feedback'; }, 3000);
+    renderLeaderboard();
+  } catch (err) {
+    fb.textContent = '✗ Greška pri brisanju.';
+    fb.className = 'submit-feedback error';
+  }
+}
+
+async function deleteEntryAdmin(userName, date) {
+  if (!confirm(`Obrisati unos za ${userName} — ${fmt(date)}?`)) return;
+  try {
+    await deleteEntry(userName, date);
+    renderPregled();
+  } catch (err) {
+    alert('Greška pri brisanju.');
+  }
 }
 
 async function submitEntry() {
@@ -1369,7 +1429,10 @@ async function renderPregled() {
                 <div><div class="day-stat-val">${e.follow_ups}</div><div class="day-stat-lbl">Follow Ups</div></div>
                 <div><div class="day-stat-val green">${e.booked_calls}</div><div class="day-stat-lbl">Booked Calls</div></div>
               </div>
-              <div class="day-conv-row">Conversion Rate: <strong>${rate}%</strong></div>
+              <div class="day-conv-row" style="display:flex;align-items:center;justify-content:space-between;">
+                <span>Conversion Rate: <strong>${rate}%</strong></span>
+                <button type="button" onclick="deleteEntryAdmin('${s.name}', '${date}')" style="font-size:11px;font-weight:600;color:var(--danger);background:none;border:1px solid rgba(242,56,73,0.3);border-radius:6px;padding:3px 8px;cursor:pointer;font-family:inherit;">Obriši</button>
+              </div>
             ` : `<div class="day-no-entry">Nije unet unos za ovaj dan</div>`}
           </div>
         </div>
