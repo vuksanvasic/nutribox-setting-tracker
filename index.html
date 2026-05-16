@@ -831,43 +831,771 @@ tr:last-child td { border-bottom: none; }
   /* Main content padding */
   .main-content { padding: 20px 16px; }
 }
+
+/* ============================================================
+   NUTRIBOX DASHBOARD — Welcome / Dept picker / Sales
+   ============================================================ */
+
+/* ===== WELCOME (PIN-first login) ===== */
+.welcome-card {
+  background: var(--bg);
+  border-radius: 20px;
+  padding: 44px 36px 36px;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: var(--shadow-lg, 0 8px 32px rgba(16,26,36,0.12));
+  text-align: center;
+}
+.welcome-brand {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  margin-bottom: 28px;
+}
+.welcome-brand-sub {
+  font-size: 13px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  font-weight: 500;
+}
+.welcome-avatar {
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  background: var(--primary-light, rgba(49,112,57,0.1));
+  color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  margin: 0 auto 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 18px rgba(49,112,57,0.18);
+}
+.welcome-avatar img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  object-position: top;
+}
+.welcome-avatar .welcome-avatar-initial {
+  font-size: 30px; font-weight: 700;
+}
+.welcome-greeting {
+  font-size: 22px; font-weight: 700; color: var(--text);
+  margin-bottom: 4px; letter-spacing: -0.01em;
+}
+.welcome-greeting-sub {
+  font-size: 13px; color: var(--text-muted, rgba(16,26,36,0.55));
+  margin-bottom: 24px;
+}
+.welcome-pin {
+  width: 100%; text-align: center;
+  font-size: 26px; font-weight: 700; letter-spacing: 14px;
+  padding: 16px 14px;
+  border: 2px solid var(--border-md, rgba(16,26,36,0.18));
+  border-radius: var(--radius, 12px);
+  outline: none;
+  background: var(--bg-secondary, #f8f8f8);
+  color: var(--text);
+  font-family: inherit;
+  transition: border-color 0.15s;
+  -moz-appearance: textfield;
+}
+.welcome-pin::-webkit-outer-spin-button,
+.welcome-pin::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.welcome-pin:focus { border-color: var(--primary); }
+.welcome-pin.error { border-color: var(--danger); animation: welcomeShake 0.35s ease; }
+@keyframes welcomeShake {
+  0%,100% { transform: translateX(0); }
+  20% { transform: translateX(-8px); }
+  40% { transform: translateX(8px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+.welcome-pin-error {
+  color: var(--danger);
+  font-size: 12px; margin-top: 10px; min-height: 18px;
+  font-weight: 500;
+}
+.welcome-submit {
+  width: 100%; padding: 14px; margin-top: 14px;
+  background: var(--primary); color: white;
+  border: none; border-radius: var(--radius, 12px);
+  font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: inherit;
+  transition: all 0.15s;
+}
+.welcome-submit:hover:not(:disabled) { background: var(--primary-hover); }
+.welcome-submit:disabled { opacity: 0.4; cursor: not-allowed; }
+.welcome-footer {
+  margin-top: 22px;
+  font-size: 11px;
+  color: var(--text-light, rgba(16,26,36,0.35));
+  font-weight: 500;
+}
+
+/* ===== DEPARTMENT PICKER ===== */
+#dept-screen.active {
+  display: flex !important;
+  align-items: center; justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+.dept-card {
+  background: var(--bg);
+  border-radius: 20px;
+  padding: 40px 36px 30px;
+  width: 100%;
+  max-width: 620px;
+  box-shadow: var(--shadow-lg, 0 8px 32px rgba(16,26,36,0.12));
+  text-align: center;
+}
+.dept-brand {
+  display: inline-flex; align-items: center; gap: 8px;
+  margin-bottom: 22px;
+}
+.dept-brand-sub {
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  font-weight: 500; font-size: 14px;
+}
+.dept-greeting {
+  font-size: 26px; font-weight: 700;
+  letter-spacing: -0.02em; margin-bottom: 4px;
+}
+.dept-greeting-sub {
+  font-size: 12px; color: var(--text-muted, rgba(16,26,36,0.55));
+  font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.1em; margin-bottom: 26px;
+}
+.dept-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.dept-btn {
+  background: var(--bg-secondary, #f8f8f8);
+  border: 1.5px solid var(--border, rgba(16,26,36,0.1));
+  border-radius: 14px;
+  padding: 22px 20px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.18s;
+  font-family: inherit;
+  position: relative;
+}
+.dept-btn:hover {
+  border-color: var(--primary);
+  background: rgba(49,112,57,0.05);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow, 0 1px 4px rgba(16,26,36,0.06), 0 2px 12px rgba(16,26,36,0.06));
+}
+.dept-icon {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 14px;
+  color: white;
+}
+.dept-btn.setting .dept-icon { background: #4a5568; }
+.dept-btn.sales .dept-icon { background: var(--primary); }
+.dept-name {
+  font-size: 15px; font-weight: 700;
+  margin-bottom: 4px; color: var(--text);
+}
+.dept-desc {
+  font-size: 12px; color: var(--text-muted, rgba(16,26,36,0.55));
+  line-height: 1.5;
+}
+.dept-back {
+  background: transparent; border: none;
+  font-size: 12px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  cursor: pointer;
+  font-family: inherit;
+  font-weight: 500;
+  padding: 6px 12px;
+}
+.dept-back:hover { color: var(--danger); }
+@media (max-width: 580px) {
+  .dept-grid { grid-template-columns: 1fr; }
+  .dept-card { padding: 32px 24px 24px; }
+}
+
+/* ===== SALES SCREEN ===== */
+.sales-content { max-width: 1100px; padding: 28px 24px 60px; }
+
+.btn-switch-dept {
+  display: inline-flex; align-items: center; gap: 6px;
+  padding: 6px 12px;
+  font-size: 12px; font-weight: 600;
+  background: var(--bg-secondary, #f8f8f8);
+  border: 1.5px solid var(--border-md, rgba(16,26,36,0.18));
+  border-radius: var(--radius-sm, 8px);
+  color: var(--text);
+  cursor: pointer; font-family: inherit;
+  transition: all 0.15s;
+}
+.btn-switch-dept:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+@media (max-width: 640px) {
+  .btn-switch-dept span { display: none; }
+  .btn-switch-dept { padding: 6px 8px; }
+}
+
+.page-title-row {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  margin-bottom: 22px; flex-wrap: wrap; gap: 12px;
+}
+.page-title { font-size: 22px; font-weight: 700; letter-spacing: -0.01em; }
+.page-subtitle {
+  font-size: 13px; color: var(--text-muted, rgba(16,26,36,0.55));
+  margin-top: 2px;
+}
+
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+  margin-bottom: 14px;
+}
+.kpi-card {
+  background: var(--bg);
+  border-radius: var(--radius, 12px);
+  padding: 18px 18px 20px;
+  border: 1.5px solid var(--border, rgba(16,26,36,0.1));
+  transition: all 0.15s;
+}
+.kpi-card:hover { border-color: var(--border-md, rgba(16,26,36,0.18)); }
+.kpi-label {
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  margin-bottom: 10px;
+}
+.kpi-value {
+  font-size: 32px; font-weight: 700;
+  color: var(--text); line-height: 1;
+  letter-spacing: -0.02em;
+}
+.kpi-value.green { color: var(--primary); }
+.kpi-value.danger { color: var(--danger); }
+.kpi-sub {
+  font-size: 12px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  margin-top: 8px; font-weight: 500;
+}
+.kpi-sub strong { color: var(--text); font-weight: 600; }
+
+.sales-conv-bar { margin-bottom: 22px !important; }
+.sales-conv-left { display: flex; align-items: center; gap: 12px; }
+.sales-conv-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  background: var(--primary); color: white;
+  display: flex; align-items: center; justify-content: center;
+}
+.sales-conv-text {
+  font-size: 13px; font-weight: 500; color: var(--primary);
+}
+.sales-conv-text strong { display: block; font-size: 14px; font-weight: 700; }
+.sales-conv-value {
+  font-size: 28px; font-weight: 700;
+  color: var(--primary); letter-spacing: -0.02em;
+}
+
+.sales-grid-2 {
+  display: grid; grid-template-columns: 1.4fr 1fr;
+  gap: 16px; margin-bottom: 16px;
+}
+@media (max-width: 880px) { .sales-grid-2 { grid-template-columns: 1fr; } }
+
+.sales-section-card {
+  background: var(--bg);
+  border-radius: var(--radius, 12px);
+  border: 1.5px solid var(--border, rgba(16,26,36,0.1));
+  padding: 22px;
+}
+.sales-section-head {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 18px; flex-wrap: wrap; gap: 12px;
+}
+.sales-section-title { font-size: 15px; font-weight: 700; }
+.sales-section-sub {
+  font-size: 12px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  margin-top: 2px; font-weight: 500;
+}
+
+/* packages */
+.pkg-list { display: flex; flex-direction: column; gap: 14px; }
+.pkg-row { display: flex; align-items: center; gap: 14px; }
+.pkg-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.pkg-info { flex: 1; min-width: 0; }
+.pkg-name { font-size: 13px; font-weight: 600; }
+.pkg-price-label {
+  font-size: 11px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  margin-top: 1px; font-weight: 500;
+}
+.pkg-bar-wrap {
+  flex: 1; max-width: 320px; height: 8px;
+  background: var(--bg-secondary, #f8f8f8);
+  border-radius: 100px; overflow: hidden;
+  border: 1px solid var(--border, rgba(16,26,36,0.1));
+}
+.pkg-bar-fill { height: 100%; border-radius: 100px; }
+.pkg-stats { text-align: right; min-width: 130px; }
+.pkg-count { font-size: 16px; font-weight: 700; }
+.pkg-revenue {
+  font-size: 12px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  margin-top: 1px; font-weight: 500;
+}
+
+/* lost reasons */
+.reasons-wrap { display: flex; flex-direction: column; gap: 12px; }
+.reason-row { display: flex; align-items: center; gap: 12px; }
+.reason-icon-wrap {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; flex-shrink: 0;
+}
+.reason-info { flex: 1; min-width: 0; }
+.reason-name { font-size: 13px; font-weight: 600; }
+.reason-pct {
+  font-size: 11px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  margin-top: 1px; font-weight: 500;
+}
+.reason-bar-wrap {
+  flex: 1; max-width: 220px; height: 6px;
+  background: var(--bg-secondary, #f8f8f8);
+  border-radius: 100px; overflow: hidden;
+}
+.reason-bar-fill { height: 100%; border-radius: 100px; }
+.reason-count {
+  font-size: 16px; font-weight: 700;
+  min-width: 28px; text-align: right;
+}
+
+.reasons-footer {
+  margin-top: 14px; padding-top: 14px;
+  border-top: 1px solid var(--border, rgba(16,26,36,0.1));
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; flex-wrap: wrap;
+  font-size: 12px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+}
+.reasons-footer-info {
+  display: flex; align-items: center; gap: 8px;
+  flex: 1; min-width: 0;
+}
+.reasons-footer-icon {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: var(--primary-light, rgba(49,112,57,0.1));
+  color: var(--primary);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.reasons-footer-count { white-space: nowrap; }
+
+/* calls table */
+.calls-table-wrap {
+  background: var(--bg);
+  border-radius: var(--radius, 12px);
+  border: 1.5px solid var(--border, rgba(16,26,36,0.1));
+  overflow: hidden;
+}
+.calls-table-head {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border, rgba(16,26,36,0.1));
+  display: flex; align-items: center; justify-content: space-between;
+  flex-wrap: wrap; gap: 10px;
+}
+.sales-search-input {
+  padding: 8px 12px 8px 34px;
+  border: 1.5px solid var(--border-md, rgba(16,26,36,0.18));
+  border-radius: var(--radius-sm, 8px);
+  font-size: 13px; font-family: inherit;
+  width: 240px; max-width: 100%;
+  outline: none; transition: border-color 0.15s;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23101a24' stroke-opacity='0.55' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'><circle cx='11' cy='11' r='7'/><line x1='21' y1='21' x2='16.65' y2='16.65'/></svg>");
+  background-repeat: no-repeat;
+  background-position: 11px center;
+}
+.sales-search-input:focus { border-color: var(--primary); }
+
+.sales-table { width: 100%; border-collapse: collapse; }
+.sales-table th {
+  padding: 11px 16px; text-align: left;
+  font-size: 11px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  background: var(--bg-secondary, #f8f8f8);
+  border-bottom: 1px solid var(--border, rgba(16,26,36,0.1));
+}
+.sales-table td {
+  padding: 13px 16px; font-size: 13px;
+  border-bottom: 1px solid var(--border, rgba(16,26,36,0.1));
+  vertical-align: middle;
+}
+.sales-table tr:last-child td { border-bottom: none; }
+.sales-table tbody tr:hover td { background: var(--bg-secondary, #f8f8f8); cursor: pointer; }
+
+.cell-primary { font-weight: 600; }
+.cell-sub {
+  font-size: 11px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  margin-top: 1px; font-weight: 500;
+}
+.cell-muted { color: var(--text-muted, rgba(16,26,36,0.55)); }
+.cell-revenue {
+  font-weight: 700;
+  color: var(--primary);
+  text-align: right;
+}
+.cell-quote {
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  font-style: italic;
+  max-width: 280px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+
+.sales-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 11px; font-weight: 700;
+  padding: 4px 10px; border-radius: 100px;
+  letter-spacing: 0.02em;
+}
+.sales-badge::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+.badge-won { background: var(--primary-light, rgba(49,112,57,0.1)); color: var(--primary); }
+.badge-won::before { background: var(--primary); }
+.badge-lost { background: rgba(242,56,73,0.1); color: var(--danger); }
+.badge-lost::before { background: var(--danger); }
+.badge-noshow { background: rgba(245,166,35,0.12); color: #c98a0a; }
+.badge-noshow::before { background: #c98a0a; }
+.badge-pending {
+  background: rgba(16,26,36,0.06);
+  color: var(--text-muted, rgba(16,26,36,0.55));
+}
+.badge-pending::before { background: var(--text-muted, rgba(16,26,36,0.55)); }
+
+.sales-table-foot {
+  padding: 14px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-top: 1px solid var(--border, rgba(16,26,36,0.1));
+  font-size: 12px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+}
+.sales-pager { display: flex; gap: 4px; }
+.sales-pager-btn {
+  width: 28px; height: 28px;
+  border: 1.5px solid var(--border-md, rgba(16,26,36,0.18));
+  border-radius: 6px;
+  background: var(--bg);
+  font-size: 12px; font-weight: 600;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  cursor: pointer;
+  font-family: inherit;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+.sales-pager-btn:hover {
+  color: var(--text);
+  border-color: var(--text-muted, rgba(16,26,36,0.55));
+}
+.sales-pager-btn.active {
+  background: var(--primary);
+  border-color: var(--primary); color: white;
+}
+.sales-pager-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.sales-stub-note {
+  margin-top: 20px;
+  padding: 14px 18px;
+  background: rgba(245,166,35,0.08);
+  border: 1.5px solid rgba(245,166,35,0.25);
+  border-radius: var(--radius, 12px);
+  font-size: 12px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  text-align: center;
+}
+.sales-stub-note strong { color: var(--text); }
+
+/* ===== DATE RANGE PICKER ===== */
+.dp-wrap { position: relative; }
+.dp-trigger {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 10px 14px;
+  background: var(--bg);
+  border: 1.5px solid var(--border-md, rgba(16,26,36,0.18));
+  border-radius: var(--radius-sm, 8px);
+  font-size: 13px; font-weight: 600;
+  color: var(--text);
+  cursor: pointer; font-family: inherit;
+  transition: all 0.15s; white-space: nowrap;
+}
+.dp-trigger:hover { border-color: var(--primary); }
+.dp-trigger.open {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(49,112,57,0.08);
+}
+.dp-trigger .dp-cal-icon { color: var(--text-muted, rgba(16,26,36,0.55)); flex-shrink: 0; }
+.dp-trigger .dp-chevron { color: var(--text-muted, rgba(16,26,36,0.55)); flex-shrink: 0; transition: transform 0.15s; }
+.dp-trigger.open .dp-chevron { transform: rotate(180deg); }
+
+.dp-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 200;
+  background: var(--bg);
+  border: 1px solid var(--border, rgba(16,26,36,0.1));
+  border-radius: var(--radius, 12px);
+  box-shadow: var(--shadow-lg, 0 8px 32px rgba(16,26,36,0.12));
+  display: none;
+  width: 720px;
+  max-width: calc(100vw - 48px);
+  overflow: hidden;
+}
+.dp-popover.open { display: flex; }
+
+.dp-presets {
+  width: 180px;
+  border-right: 1px solid var(--border, rgba(16,26,36,0.1));
+  padding: 10px;
+  background: var(--bg-secondary, #f8f8f8);
+  overflow-y: auto; max-height: 480px;
+  flex-shrink: 0;
+}
+.dp-preset-btn {
+  display: block; width: 100%;
+  padding: 8px 12px;
+  background: transparent;
+  border: none;
+  border-radius: 6px;
+  font-size: 13px; font-weight: 500;
+  font-family: inherit;
+  text-align: left;
+  color: var(--text);
+  cursor: pointer;
+  margin-bottom: 2px;
+  transition: background 0.1s;
+}
+.dp-preset-btn:hover { background: var(--bg); }
+.dp-preset-btn.active {
+  background: var(--primary-light, rgba(49,112,57,0.1));
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.dp-main { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.dp-toolbar {
+  display: flex; gap: 8px;
+  padding: 14px 16px 4px;
+}
+.dp-select {
+  flex: 1;
+  padding: 8px 10px;
+  border: 1.5px solid var(--border-md, rgba(16,26,36,0.18));
+  border-radius: 6px;
+  font-size: 13px; font-weight: 600;
+  font-family: inherit;
+  color: var(--text);
+  background: var(--bg);
+  cursor: pointer; outline: none;
+}
+.dp-select:focus { border-color: var(--primary); }
+
+.dp-calendars {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 20px; padding: 12px 16px 16px;
+}
+.dp-cal-head {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.dp-cal-title { font-size: 13px; font-weight: 700; color: var(--text); }
+.dp-nav {
+  width: 26px; height: 26px;
+  display: inline-flex; align-items: center; justify-content: center;
+  border: none; background: transparent;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  cursor: pointer; border-radius: 6px;
+  font-family: inherit;
+}
+.dp-nav:hover {
+  background: var(--bg-secondary, #f8f8f8);
+  color: var(--text);
+}
+.dp-nav.invisible { visibility: hidden; pointer-events: none; }
+
+.dp-cal-grid {
+  display: grid; grid-template-columns: repeat(7, 1fr);
+  row-gap: 2px; column-gap: 0;
+}
+.dp-dow {
+  font-size: 10px; font-weight: 600;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  text-align: center; padding: 4px 0;
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.dp-day {
+  position: relative;
+  height: 34px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 500;
+  color: var(--text);
+  cursor: pointer;
+  border: none; background: transparent;
+  font-family: inherit;
+  border-radius: 0;
+}
+.dp-day:hover:not(.outside):not(.in-range):not(.range-start):not(.range-end):not(.range-single) {
+  background: var(--bg-secondary, #f8f8f8);
+}
+.dp-day.outside { color: var(--text-light, rgba(16,26,36,0.35)); opacity: 0.45; }
+.dp-day.today {
+  font-weight: 700;
+  box-shadow: inset 0 0 0 1.5px var(--border-md, rgba(16,26,36,0.18));
+  border-radius: 6px;
+}
+.dp-day.in-range {
+  background: var(--primary-light, rgba(49,112,57,0.1));
+  color: var(--primary); font-weight: 600;
+}
+.dp-day.range-start, .dp-day.range-end {
+  background: var(--primary);
+  color: white; font-weight: 700;
+}
+.dp-day.range-start { border-radius: 6px 0 0 6px; }
+.dp-day.range-end { border-radius: 0 6px 6px 0; }
+.dp-day.range-start.range-end, .dp-day.range-single { border-radius: 6px; }
+.dp-day.range-single {
+  background: var(--primary);
+  color: white; font-weight: 700;
+}
+
+.dp-footer {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 16px;
+  border-top: 1px solid var(--border, rgba(16,26,36,0.1));
+  background: var(--bg-secondary, #f8f8f8);
+  gap: 12px; flex-wrap: wrap;
+}
+.dp-range-text {
+  font-size: 12px;
+  color: var(--text-muted, rgba(16,26,36,0.55));
+  font-weight: 500;
+}
+.dp-range-text strong { color: var(--text); font-weight: 700; }
+.dp-actions { display: flex; gap: 8px; }
+.dp-btn {
+  padding: 8px 18px; border-radius: 6px;
+  font-size: 13px; font-weight: 600;
+  font-family: inherit;
+  cursor: pointer; border: 1.5px solid transparent;
+  transition: all 0.15s;
+}
+.dp-btn-cancel {
+  background: var(--bg);
+  border-color: var(--border-md, rgba(16,26,36,0.18));
+  color: var(--text-muted, rgba(16,26,36,0.55));
+}
+.dp-btn-cancel:hover {
+  color: var(--text);
+  border-color: var(--text-muted, rgba(16,26,36,0.55));
+}
+.dp-btn-apply {
+  background: var(--primary);
+  color: white;
+  border-color: var(--primary);
+}
+.dp-btn-apply:hover {
+  background: var(--primary-hover);
+  border-color: var(--primary-hover);
+}
+@media (max-width: 720px) {
+  .dp-popover { width: 360px; }
+  .dp-presets { display: none; }
+  .dp-calendars { grid-template-columns: 1fr; }
+}
 </style>
 </head>
 <body>
 
 <!-- ==============================
-     LOGIN
+     WELCOME (PIN-first login)
 =============================== -->
 <div id="login-screen" class="screen active">
-  <div class="login-card">
-    <div class="login-brand">
-      <img src="assets/logo.png" alt="Nutribox" style="height:36px; width:auto; margin-bottom:8px;">
-      <div class="login-subtitle">Appointment Setting Tracker</div>
+  <div class="welcome-card">
+    <div class="welcome-brand">
+      <img src="assets/logo.png" alt="Nutribox" style="height:32px; width:auto;">
+      <div class="welcome-brand-sub">Dashboard</div>
     </div>
 
-    <div class="section-label">Tim</div>
-    <div class="login-grid">
-      <button type="button" class="login-btn" onclick="openPin('Andrija')">
-        <div class="avatar" style="background:#317039; width:52px; height:52px; font-size:20px">
-          <img src="assets/andrija.jpg" alt="Andrija">
+    <div class="welcome-avatar" id="welcome-avatar">
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0110 0v4"/>
+      </svg>
+    </div>
+    <div class="welcome-greeting" id="welcome-greeting">Dobrodošao 👋</div>
+    <div class="welcome-greeting-sub" id="welcome-greeting-sub">Unesi svoj PIN za pristup</div>
+
+    <input
+      class="welcome-pin"
+      id="welcome-pin"
+      type="password"
+      inputmode="numeric"
+      maxlength="4"
+      placeholder="• • • •"
+      autocomplete="off"
+      oninput="onWelcomePinInput()"
+      onkeydown="onWelcomePinKey(event)"
+    />
+    <div class="welcome-pin-error" id="welcome-pin-error"></div>
+
+    <button class="welcome-submit" id="welcome-submit" type="button" onclick="confirmWelcomePin()" disabled>Uloguj se</button>
+
+    <div class="welcome-footer">Zaštićeno PIN-om · Nutribox</div>
+  </div>
+</div>
+
+<!-- ==============================
+     DEPARTMENT PICKER
+=============================== -->
+<div id="dept-screen" class="screen">
+  <div class="dept-card">
+    <div class="dept-brand">
+      <img src="assets/logo.png" alt="Nutribox" style="height:22px; width:auto;">
+      <span class="dept-brand-sub">Dashboard</span>
+    </div>
+
+    <div class="dept-greeting" id="dept-greeting">Zdravo, Vuksane 👋</div>
+    <div class="dept-greeting-sub">Izaberi departman</div>
+
+    <div class="dept-grid">
+      <button type="button" class="dept-btn setting" id="dept-card-setting" onclick="enterDepartment('setting')">
+        <div class="dept-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
         </div>
-        <span class="login-name">Andrija</span>
+        <div class="dept-name">Appointment Setting</div>
+        <div class="dept-desc">Booked calls, conversations, follow-up-ovi, conversion rate.</div>
       </button>
-      <button type="button" class="login-btn" onclick="openPin('Tatjana')">
-        <div class="avatar" style="background:#388041; width:52px; height:52px; font-size:20px">T</div>
-        <span class="login-name">Tatjana</span>
+
+      <button type="button" class="dept-btn sales" id="dept-card-sales" onclick="enterDepartment('sales')">
+        <div class="dept-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="12" y1="1" x2="12" y2="23"/>
+            <path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/>
+          </svg>
+        </div>
+        <div class="dept-name">Sales</div>
+        <div class="dept-desc">Pozivi, zatvoreni paketi, prihod i razlozi za izgubljene prilike.</div>
       </button>
     </div>
 
-    <div class="login-divider"><span>Admin</span></div>
-
-    <button type="button" class="login-admin-btn" onclick="openPin('Vuksan')">
-      <img src="assets/vuksan.png" style="width:40px; height:40px; border-radius:50%; object-fit:cover; object-position: top;" alt="Vuksan">
-      <div class="login-admin-info">
-        <div class="login-name">Vuksan</div>
-        <div class="login-admin-role">Administrator</div>
-      </div>
-    </button>
+    <button type="button" class="dept-back" onclick="logout()">← Odjavi se</button>
   </div>
 </div>
 
@@ -940,6 +1668,10 @@ tr:last-child td { border-bottom: none; }
       <em>Admin Panel</em>
     </div>
     <div class="header-right">
+      <button type="button" class="btn-switch-dept" id="admin-switch-dept" onclick="backToDeptPicker()" title="Promeni departman" style="display:none">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+        <span>Promeni departman</span>
+      </button>
       <div class="header-user">
         <div class="header-avatar" id="admin-header-avatar" style="background:#101a24">
           <img src="assets/vuksan.png" style="width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%;">
@@ -1016,6 +1748,260 @@ tr:last-child td { border-bottom: none; }
 </div>
 
 <!-- ==============================
+     SALES SCREEN
+=============================== -->
+<div id="sales-screen" class="screen">
+  <header class="app-header">
+    <div class="header-brand">
+      <img src="assets/logo.png" alt="Nutribox" style="height:22px; width:auto; vertical-align:middle; margin-right:6px;">
+      <em>Sales Dashboard</em>
+    </div>
+    <div class="header-right">
+      <button type="button" class="btn-switch-dept" id="sales-switch-dept" onclick="backToDeptPicker()" title="Promeni departman">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 014-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 01-4 4H3"/></svg>
+        <span>Promeni departman</span>
+      </button>
+      <div class="header-user">
+        <div class="header-avatar" id="sales-header-avatar"></div>
+        <span id="sales-header-name"></span>
+      </div>
+      <button type="button" class="btn-logout" onclick="logout()">Odjava</button>
+    </div>
+  </header>
+
+  <div class="main-content sales-content">
+
+    <!-- Title + date picker -->
+    <div class="page-title-row">
+      <div>
+        <div class="page-title">Pregled prodaje</div>
+        <div class="page-subtitle" id="sales-dpSubtitle">Poslednjih 30 dana</div>
+      </div>
+
+      <div class="dp-wrap">
+        <button class="dp-trigger" id="sales-dpTrigger" type="button">
+          <svg class="dp-cal-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          <span id="sales-dpLabel">Poslednjih 30 dana</span>
+          <svg class="dp-chevron" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="6 9 12 15 18 9"/>
+          </svg>
+        </button>
+
+        <div class="dp-popover" id="sales-dpPopover">
+          <div class="dp-presets" id="sales-dpPresets"></div>
+          <div class="dp-main">
+            <div class="dp-toolbar">
+              <select class="dp-select" id="sales-dpMonth"></select>
+              <select class="dp-select" id="sales-dpYear"></select>
+            </div>
+            <div class="dp-calendars" id="sales-dpCalendars"></div>
+            <div class="dp-footer">
+              <div class="dp-range-text" id="sales-dpRangeText"></div>
+              <div class="dp-actions">
+                <button class="dp-btn dp-btn-cancel" id="sales-dpCancel" type="button">Otkaži</button>
+                <button class="dp-btn dp-btn-apply" id="sales-dpApply" type="button">Primeni</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI cards -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-label">Pozivi</div>
+        <div class="kpi-value">47</div>
+        <div class="kpi-sub"><strong>+12</strong> vs prošli period</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Zatvoreno</div>
+        <div class="kpi-value green">12</div>
+        <div class="kpi-sub"><strong>25.5%</strong> conversion</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Nije zatvoreno</div>
+        <div class="kpi-value danger">31</div>
+        <div class="kpi-sub"><strong>4</strong> no-show uračunato</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-label">Prihod</div>
+        <div class="kpi-value green">674.000</div>
+        <div class="kpi-sub">RSD</div>
+      </div>
+    </div>
+
+    <!-- Conversion bar -->
+    <div class="conversion-bar sales-conv-bar">
+      <div class="sales-conv-left">
+        <div class="sales-conv-icon">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 3v18h18"/><path d="M7 14l4-4 4 4 6-6"/>
+          </svg>
+        </div>
+        <div class="sales-conv-text">
+          <strong>Conversion rate</strong>
+          12 zatvoreno od 47 poziva (no-show isključeni)
+        </div>
+      </div>
+      <div class="sales-conv-value">25.5%</div>
+    </div>
+
+    <!-- Packages + Lost reasons -->
+    <div class="sales-grid-2">
+
+      <div class="sales-section-card">
+        <div class="sales-section-head">
+          <div>
+            <div class="sales-section-title">Prodaje po paketima</div>
+            <div class="sales-section-sub">12 zatvorenih · 674.000 RSD</div>
+          </div>
+        </div>
+
+        <div class="pkg-list">
+          <div class="pkg-row">
+            <div class="pkg-dot" style="background:#317039"></div>
+            <div class="pkg-info"><div class="pkg-name">28-dnevni</div><div class="pkg-price-label">78.400 RSD / kom</div></div>
+            <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:100%;background:#317039"></div></div>
+            <div class="pkg-stats"><div class="pkg-count">5</div><div class="pkg-revenue">392.000 RSD</div></div>
+          </div>
+          <div class="pkg-row">
+            <div class="pkg-dot" style="background:#4d9554"></div>
+            <div class="pkg-info"><div class="pkg-name">20-dnevni</div><div class="pkg-price-label">60.000 RSD / kom</div></div>
+            <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:60%;background:#4d9554"></div></div>
+            <div class="pkg-stats"><div class="pkg-count">3</div><div class="pkg-revenue">180.000 RSD</div></div>
+          </div>
+          <div class="pkg-row">
+            <div class="pkg-dot" style="background:#7eb085"></div>
+            <div class="pkg-info"><div class="pkg-name">7-dnevni</div><div class="pkg-price-label">21.000 RSD / kom</div></div>
+            <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:40%;background:#7eb085"></div></div>
+            <div class="pkg-stats"><div class="pkg-count">2</div><div class="pkg-revenue">42.000 RSD</div></div>
+          </div>
+          <div class="pkg-row">
+            <div class="pkg-dot" style="background:#a8c9ac"></div>
+            <div class="pkg-info"><div class="pkg-name">5-dnevni</div><div class="pkg-price-label">15.000 RSD / kom</div></div>
+            <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:20%;background:#a8c9ac"></div></div>
+            <div class="pkg-stats"><div class="pkg-count">1</div><div class="pkg-revenue">15.000 RSD</div></div>
+          </div>
+          <div class="pkg-row">
+            <div class="pkg-dot" style="background:#101a24"></div>
+            <div class="pkg-info"><div class="pkg-name">Custom</div><div class="pkg-price-label">manuelna cena</div></div>
+            <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:20%;background:#101a24"></div></div>
+            <div class="pkg-stats"><div class="pkg-count">1</div><div class="pkg-revenue">45.000 RSD</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="sales-section-card">
+        <div class="sales-section-head">
+          <div>
+            <div class="sales-section-title">Razlozi za lost</div>
+            <div class="sales-section-sub">31 lost · AI klasterovanje</div>
+          </div>
+        </div>
+
+        <div class="reasons-wrap">
+          <div class="reason-row">
+            <div class="reason-icon-wrap" style="background:rgba(242,56,73,0.1);color:#f23849">💰</div>
+            <div class="reason-info"><div class="reason-name">Cena / budžet</div><div class="reason-pct">45%</div></div>
+            <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:100%;background:#f23849"></div></div>
+            <div class="reason-count">14</div>
+          </div>
+          <div class="reason-row">
+            <div class="reason-icon-wrap" style="background:rgba(245,166,35,0.12);color:#c98a0a">🤔</div>
+            <div class="reason-info"><div class="reason-name">Razmisliće</div><div class="reason-pct">26%</div></div>
+            <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:57%;background:#c98a0a"></div></div>
+            <div class="reason-count">8</div>
+          </div>
+          <div class="reason-row">
+            <div class="reason-icon-wrap" style="background:rgba(49,112,57,0.1);color:#317039">⏰</div>
+            <div class="reason-info"><div class="reason-name">Pogrešno vreme</div><div class="reason-pct">16%</div></div>
+            <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:36%;background:#317039"></div></div>
+            <div class="reason-count">5</div>
+          </div>
+          <div class="reason-row">
+            <div class="reason-icon-wrap" style="background:rgba(16,26,36,0.06);color:#101a24">👥</div>
+            <div class="reason-info"><div class="reason-name">Već ima coacha</div><div class="reason-pct">10%</div></div>
+            <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:21%;background:#101a24"></div></div>
+            <div class="reason-count">3</div>
+          </div>
+          <div class="reason-row">
+            <div class="reason-icon-wrap" style="background:rgba(16,26,36,0.04);color:rgba(16,26,36,0.4)">❓</div>
+            <div class="reason-info"><div class="reason-name">Ostalo</div><div class="reason-pct">3%</div></div>
+            <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:7%;background:rgba(16,26,36,0.3)"></div></div>
+            <div class="reason-count">1</div>
+          </div>
+        </div>
+
+        <div class="reasons-footer">
+          <div class="reasons-footer-info">
+            <div class="reasons-footer-icon">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </div>
+            <span>Svaki razlog je tekst koji prodavac ručno upiše posle poziva</span>
+          </div>
+          <span class="reasons-footer-count">Prikazano 10 od 31</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calls table -->
+    <div class="calls-table-wrap">
+      <div class="calls-table-head">
+        <div>
+          <div class="sales-section-title">Svi pozivi</div>
+          <div class="sales-section-sub">47 zapisa · klik na red za detalje</div>
+        </div>
+        <input class="sales-search-input" placeholder="Pretraga po imenu, telefonu…" />
+      </div>
+
+      <table class="sales-table">
+        <thead>
+          <tr>
+            <th>Datum</th><th>Lead</th><th>Paket</th><th>Status</th><th style="text-align:right;">Prihod</th><th>Razlog (lost)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td><div class="cell-primary">15.05 14:00</div><div class="cell-sub">pre 2h</div></td><td><div class="cell-primary">Marko Jovanović</div><div class="cell-sub">+381 64 123 4567</div></td><td>28-dnevni</td><td><span class="sales-badge badge-won">Won</span></td><td class="cell-revenue">78.400 RSD</td><td class="cell-muted">—</td></tr>
+          <tr><td><div class="cell-primary">15.05 12:30</div><div class="cell-sub">pre 4h</div></td><td><div class="cell-primary">Ana Petrović</div><div class="cell-sub">+381 65 987 6543</div></td><td class="cell-muted">—</td><td><span class="sales-badge badge-lost">Lost</span></td><td class="cell-muted" style="text-align:right;">—</td><td class="cell-quote">"Skupo mi je trenutno, možda za par meseci"</td></tr>
+          <tr><td><div class="cell-primary">15.05 10:00</div><div class="cell-sub">pre 6h</div></td><td><div class="cell-primary">Stefan Nikolić</div><div class="cell-sub">+381 63 555 1234</div></td><td>Custom</td><td><span class="sales-badge badge-won">Won</span></td><td class="cell-revenue">45.000 RSD</td><td class="cell-muted">—</td></tr>
+          <tr><td><div class="cell-primary">14.05 16:00</div><div class="cell-sub">juče</div></td><td><div class="cell-primary">Jelena Marković</div><div class="cell-sub">+381 60 111 2233</div></td><td class="cell-muted">—</td><td><span class="sales-badge badge-noshow">No-show</span></td><td class="cell-muted" style="text-align:right;">—</td><td class="cell-muted">—</td></tr>
+          <tr><td><div class="cell-primary">14.05 11:00</div><div class="cell-sub">juče</div></td><td><div class="cell-primary">Nikola Tomić</div><div class="cell-sub">+381 64 888 9900</div></td><td>20-dnevni</td><td><span class="sales-badge badge-won">Won</span></td><td class="cell-revenue">60.000 RSD</td><td class="cell-muted">—</td></tr>
+          <tr><td><div class="cell-primary">13.05 17:30</div><div class="cell-sub">pre 2 dana</div></td><td><div class="cell-primary">Milica Stojanović</div><div class="cell-sub">+381 65 444 5566</div></td><td class="cell-muted">—</td><td><span class="sales-badge badge-lost">Lost</span></td><td class="cell-muted" style="text-align:right;">—</td><td class="cell-quote">"Već radim sa drugim nutricionistom"</td></tr>
+          <tr><td><div class="cell-primary">13.05 13:00</div><div class="cell-sub">pre 2 dana</div></td><td><div class="cell-primary">Petar Ilić</div><div class="cell-sub">+381 63 222 3344</div></td><td>7-dnevni</td><td><span class="sales-badge badge-won">Won</span></td><td class="cell-revenue">21.000 RSD</td><td class="cell-muted">—</td></tr>
+          <tr><td><div class="cell-primary">13.05 09:30</div><div class="cell-sub">pre 2 dana</div></td><td><div class="cell-primary">Tijana Đorđević</div><div class="cell-sub">+381 60 777 8899</div></td><td class="cell-muted">—</td><td><span class="sales-badge badge-lost">Lost</span></td><td class="cell-muted" style="text-align:right;">—</td><td class="cell-quote">"Suprug mi ne dozvoljava da trošim toliko"</td></tr>
+          <tr><td><div class="cell-primary">12.05 15:00</div><div class="cell-sub">pre 3 dana</div></td><td><div class="cell-primary">Aleksandar Pavlović</div><div class="cell-sub">+381 64 333 4455</div></td><td class="cell-muted">—</td><td><span class="sales-badge badge-pending">Awaiting</span></td><td class="cell-muted" style="text-align:right;">—</td><td class="cell-quote">razmisliće do kraja nedelje</td></tr>
+          <tr><td><div class="cell-primary">12.05 11:00</div><div class="cell-sub">pre 3 dana</div></td><td><div class="cell-primary">Sara Mihajlović</div><div class="cell-sub">+381 65 666 7788</div></td><td>28-dnevni</td><td><span class="sales-badge badge-won">Won</span></td><td class="cell-revenue">78.400 RSD</td><td class="cell-muted">—</td></tr>
+        </tbody>
+      </table>
+
+      <div class="sales-table-foot">
+        <div>Prikazano <strong>10</strong> od 47</div>
+        <div class="sales-pager">
+          <button class="sales-pager-btn" disabled>‹</button>
+          <button class="sales-pager-btn active">1</button>
+          <button class="sales-pager-btn">2</button>
+          <button class="sales-pager-btn">3</button>
+          <button class="sales-pager-btn">4</button>
+          <button class="sales-pager-btn">5</button>
+          <button class="sales-pager-btn">›</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sales-stub-note">
+      <strong>Demo podaci.</strong> Realna integracija sa GoHighLevel-om dolazi u sledećem koraku — webhook + Supabase schema su sledeći.
+    </div>
+
+  </div>
+</div>
+
+<!-- ==============================
      PIN MODAL
 =============================== -->
 <div class="modal-overlay hidden" id="pin-modal">
@@ -1045,9 +2031,9 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 // CONFIG
 // ============================================================
 const USERS = [
-  { name: 'Andrija', pin: '2222', role: 'setter', color: '#317039', photo: 'assets/andrija.jpg' },
-  { name: 'Tatjana', pin: '1111', role: 'setter', color: '#388041', photo: null },
-  { name: 'Vuksan',  pin: '0000', role: 'admin',  color: '#101a24', photo: 'assets/vuksan.png' }
+  { name: 'Andrija', vocative: 'Andrija', pin: '2222', role: 'setter', departments: ['setting'],          color: '#317039', photo: 'assets/andrija.jpg' },
+  { name: 'Tatjana', vocative: 'Tatjana', pin: '1111', role: 'setter', departments: ['setting'],          color: '#388041', photo: null },
+  { name: 'Vuksan',  vocative: 'Vuksane', pin: '1806', role: 'admin',  departments: ['setting','sales'], color: '#101a24', photo: 'assets/vuksan.png' }
 ];
 
 const SETTERS = USERS.filter(u => u.role === 'setter');
@@ -1155,59 +2141,140 @@ function getWeek(offset = 0) {
 }
 
 // ============================================================
-// AUTH
+// AUTH — PIN-first welcome → dept picker → dispatch
 // ============================================================
-function openPin(name) {
-  pendingUser = name;
-  document.getElementById('pin-modal-title').textContent = `Zdravo, ${name}!`;
-  document.getElementById('pin-input').value = '';
-  document.getElementById('pin-error').textContent = '';
-  document.getElementById('pin-input').classList.remove('error');
-  document.getElementById('pin-modal').classList.remove('hidden');
-  setTimeout(() => document.getElementById('pin-input').focus(), 80);
+const LS_LAST_USER = 'nutribox_dashboard_last_user';
+
+function rememberUser(name) {
+  try { localStorage.setItem(LS_LAST_USER, name); } catch (_) {}
+}
+function getLastUser() {
+  try { return localStorage.getItem(LS_LAST_USER); } catch (_) { return null; }
 }
 
-function closePin() {
-  document.getElementById('pin-modal').classList.add('hidden');
-  pendingUser = null;
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
 }
 
-function clearPinError() {
-  document.getElementById('pin-error').textContent = '';
-  document.getElementById('pin-input').classList.remove('error');
+function initWelcomeScreen() {
+  // Personalize greeting + avatar based on last logged-in user
+  // Default to Vuksan (primary admin) on first visit if no stored identity
+  const last = getLastUser() || 'Vuksan';
+  const u = USERS.find(x => x.name === last);
+  const greetEl = document.getElementById('welcome-greeting');
+  const subEl = document.getElementById('welcome-greeting-sub');
+  const avEl = document.getElementById('welcome-avatar');
+
+  if (u) {
+    greetEl.innerHTML = `Zdravo, ${u.vocative || u.name} 👋`;
+    subEl.textContent = 'Unesi svoj PIN za pristup';
+    // Show user's photo if available, else initial letter
+    if (u.photo) {
+      avEl.innerHTML = `<img src="${u.photo}" alt="${u.name}">`;
+      avEl.style.background = u.color || 'var(--primary)';
+    } else {
+      avEl.innerHTML = `<span class="welcome-avatar-initial">${u.name[0]}</span>`;
+      avEl.style.background = u.color || 'var(--primary)';
+      avEl.style.color = 'white';
+    }
+  } else {
+    greetEl.innerHTML = 'Dobrodošao 👋';
+    subEl.textContent = 'Unesi svoj PIN za pristup';
+    // Generic lock icon
+    avEl.innerHTML = '<svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>';
+    avEl.style.background = 'var(--primary-light, rgba(49,112,57,0.1))';
+    avEl.style.color = 'var(--primary)';
+  }
+  const pin = document.getElementById('welcome-pin');
+  pin.value = '';
+  pin.classList.remove('error');
+  document.getElementById('welcome-pin-error').textContent = '';
+  document.getElementById('welcome-submit').disabled = true;
+  setTimeout(() => pin.focus(), 80);
 }
 
-function confirmPin() {
-  const pin = document.getElementById('pin-input').value;
-  const user = USERS.find(u => u.name === pendingUser);
-  if (!user || pin !== user.pin) {
-    document.getElementById('pin-error').textContent = 'Pogrešan PIN. Pokušaj ponovo.';
-    document.getElementById('pin-input').classList.add('error');
-    document.getElementById('pin-input').value = '';
+function onWelcomePinInput() {
+  const pin = document.getElementById('welcome-pin');
+  pin.value = pin.value.replace(/\D/g, '');
+  document.getElementById('welcome-submit').disabled = pin.value.length !== 4;
+  document.getElementById('welcome-pin-error').textContent = '';
+  pin.classList.remove('error');
+}
+
+function onWelcomePinKey(e) {
+  if (e.key === 'Enter' && e.target.value.length === 4) confirmWelcomePin();
+}
+
+function confirmWelcomePin() {
+  const pin = document.getElementById('welcome-pin').value;
+  const user = USERS.find(u => u.pin === pin);
+  if (!user) {
+    const pinEl = document.getElementById('welcome-pin');
+    pinEl.classList.add('error');
+    document.getElementById('welcome-pin-error').textContent = 'Pogrešan PIN, pokušaj ponovo';
+    pinEl.value = '';
+    document.getElementById('welcome-submit').disabled = true;
+    setTimeout(() => pinEl.focus(), 60);
     return;
   }
-  closePin();
-  login(user);
+  currentUser = user;
+  rememberUser(user.name);
+
+  // If user has multiple departments → dept picker, else direct
+  if (user.departments.length > 1) {
+    initDeptScreen();
+    showScreen('dept-screen');
+  } else {
+    enterDepartment(user.departments[0]);
+  }
 }
 
-function login(user) {
-  currentUser = user;
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  if (user.role === 'admin') {
-    initAdminScreen();
-    document.getElementById('admin-screen').classList.add('active');
+function initDeptScreen() {
+  document.getElementById('dept-greeting').innerHTML = `Zdravo, ${currentUser.vocative || currentUser.name} 👋`;
+  // Filter cards by access
+  document.getElementById('dept-card-setting').style.display = currentUser.departments.includes('setting') ? '' : 'none';
+  document.getElementById('dept-card-sales').style.display   = currentUser.departments.includes('sales')   ? '' : 'none';
+}
+
+function enterDepartment(dept) {
+  if (dept === 'sales') {
+    initSalesScreen();
+    showScreen('sales-screen');
   } else {
-    initSetterScreen();
-    document.getElementById('setter-screen').classList.add('active');
+    // setting department — dispatch by role
+    if (currentUser.role === 'admin') {
+      initAdminScreen();
+      showScreen('admin-screen');
+    } else {
+      initSetterScreen();
+      showScreen('setter-screen');
+    }
+  }
+}
+
+function backToDeptPicker() {
+  if (currentUser && currentUser.departments.length > 1) {
+    initDeptScreen();
+    showScreen('dept-screen');
+  } else {
+    logout();
   }
 }
 
 function logout() {
   currentUser = null;
   weekOffset = 0;
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById('login-screen').classList.add('active');
+  initWelcomeScreen();
+  showScreen('login-screen');
 }
+
+// Legacy stubs (no longer used by new flow but kept to avoid runtime errors if referenced)
+function openPin() { /* deprecated */ }
+function closePin() { /* deprecated */ }
+function clearPinError() { /* deprecated */ }
+function confirmPin() { /* deprecated */ }
+function login(u) { currentUser = u; enterDepartment(u.departments[0]); }
 
 // ============================================================
 // SETTER SCREEN
@@ -1379,6 +2446,10 @@ async function renderLeaderboard() {
 // ADMIN SCREEN
 // ============================================================
 function initAdminScreen() {
+  // Show "Promeni departman" only if user has multiple departments
+  const sd = document.getElementById('admin-switch-dept');
+  if (sd) sd.style.display = (currentUser && currentUser.departments.length > 1) ? '' : 'none';
+
   // Avatar is already set via HTML img tag
 
   // Default dates
@@ -1719,9 +2790,263 @@ async function renderWeekly() {
 }
 
 // ============================================================
+// SALES SCREEN
+// ============================================================
+let salesDatePickerInitialized = false;
+
+function initSalesScreen() {
+  // Header avatar + name
+  const av = document.getElementById('sales-header-avatar');
+  av.style.background = currentUser.color;
+  if (currentUser.photo) {
+    av.innerHTML = `<img src="${currentUser.photo}" style="width:100%;height:100%;object-fit:cover;object-position:top;border-radius:50%;">`;
+  } else {
+    av.textContent = currentUser.name[0];
+  }
+  document.getElementById('sales-header-name').textContent = currentUser.name;
+
+  // Show "promeni departman" only if user has multiple
+  document.getElementById('sales-switch-dept').style.display =
+    currentUser.departments.length > 1 ? '' : 'none';
+
+  // Init date picker once
+  if (!salesDatePickerInitialized) {
+    initSalesDatePicker();
+    salesDatePickerInitialized = true;
+  }
+}
+
+// ============================================================
+// SALES DATE RANGE PICKER
+// ============================================================
+function initSalesDatePicker() {
+  const trigger = document.getElementById('sales-dpTrigger');
+  const popover = document.getElementById('sales-dpPopover');
+  const presetsEl = document.getElementById('sales-dpPresets');
+  const monthSel = document.getElementById('sales-dpMonth');
+  const yearSel = document.getElementById('sales-dpYear');
+  const calendarsEl = document.getElementById('sales-dpCalendars');
+  const rangeTextEl = document.getElementById('sales-dpRangeText');
+  const labelEl = document.getElementById('sales-dpLabel');
+  const subtitleEl = document.getElementById('sales-dpSubtitle');
+  const cancelBtn = document.getElementById('sales-dpCancel');
+  const applyBtn = document.getElementById('sales-dpApply');
+
+  const TODAY = (() => { const d = new Date(); d.setHours(0,0,0,0); return d; })();
+
+  const MONTHS = ['Januar','Februar','Mart','April','Maj','Jun','Jul','Avgust','Septembar','Oktobar','Novembar','Decembar'];
+  const MONTHS_SHORT = ['jan','feb','mar','apr','maj','jun','jul','avg','sep','okt','nov','dec'];
+  const DOW = ['Ne','Po','Ut','Sr','Če','Pe','Su'];
+
+  function ymd(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+  function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+  function addMonths(d, n) { return new Date(d.getFullYear(), d.getMonth() + n, 1); }
+  function startOfMonth(d) { return new Date(d.getFullYear(), d.getMonth(), 1); }
+  function fmt(d) { return d.getDate() + '. ' + MONTHS_SHORT[d.getMonth()] + ' ' + d.getFullYear(); }
+  function eq(a, b) { return !!a && !!b && a.getTime() === b.getTime(); }
+
+  const PRESETS = [
+    { id: 'today',      label: 'Danas',                  range: () => [TODAY, TODAY] },
+    { id: 'yesterday',  label: 'Juče',                   range: () => { const y = addDays(TODAY, -1); return [y, y]; } },
+    { id: 'this_month', label: 'Ovaj mesec',             range: () => [startOfMonth(TODAY), TODAY] },
+    { id: 'last_7',     label: 'Poslednjih 7 dana',      range: () => [addDays(TODAY, -6), TODAY] },
+    { id: 'last_14',    label: 'Poslednjih 14 dana',     range: () => [addDays(TODAY, -13), TODAY] },
+    { id: 'last_30',    label: 'Poslednjih 30 dana',     range: () => [addDays(TODAY, -29), TODAY] },
+    { id: 'last_3m',    label: 'Poslednja 3 meseca',     range: () => [addMonths(TODAY, -3), TODAY] },
+    { id: 'last_6m',    label: 'Poslednjih 6 meseci',    range: () => [addMonths(TODAY, -6), TODAY] },
+    { id: 'last_year',  label: 'Poslednja godina',       range: () => [addMonths(TODAY, -12), TODAY] },
+    { id: 'ytd',        label: 'Od početka godine',      range: () => [new Date(TODAY.getFullYear(), 0, 1), TODAY] },
+    { id: 'all_time',   label: 'Sve vreme',              range: () => [new Date(2025, 0, 1), TODAY] }
+  ];
+
+  let committed = { start: addDays(TODAY, -29), end: TODAY, presetId: 'last_30' };
+  let draft = Object.assign({}, committed);
+  let viewLeft = startOfMonth(committed.start);
+  let pickingEnd = false;
+
+  function renderPresets() {
+    presetsEl.innerHTML = '';
+    PRESETS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'dp-preset-btn' + (draft.presetId === p.id ? ' active' : '');
+      btn.textContent = p.label;
+      btn.onclick = () => {
+        const r = p.range();
+        draft.start = ymd(r[0]); draft.end = ymd(r[1]); draft.presetId = p.id;
+        viewLeft = startOfMonth(draft.end);
+        viewLeft = addMonths(viewLeft, -1);
+        if (draft.start.getTime() === draft.end.getTime()) viewLeft = startOfMonth(draft.start);
+        pickingEnd = false;
+        renderAll();
+      };
+      presetsEl.appendChild(btn);
+    });
+  }
+
+  function renderToolbar() {
+    monthSel.innerHTML = '';
+    MONTHS.forEach((m, i) => {
+      const opt = document.createElement('option');
+      opt.value = i; opt.textContent = m;
+      if (i === viewLeft.getMonth()) opt.selected = true;
+      monthSel.appendChild(opt);
+    });
+    yearSel.innerHTML = '';
+    for (let y = 2024; y <= 2030; y++) {
+      const opt = document.createElement('option');
+      opt.value = y; opt.textContent = y;
+      if (y === viewLeft.getFullYear()) opt.selected = true;
+      yearSel.appendChild(opt);
+    }
+    monthSel.onchange = () => { viewLeft = new Date(viewLeft.getFullYear(), parseInt(monthSel.value), 1); renderAll(); };
+    yearSel.onchange = () => { viewLeft = new Date(parseInt(yearSel.value), viewLeft.getMonth(), 1); renderAll(); };
+  }
+
+  function renderCalendar(month, showLeftNav, showRightNav) {
+    const wrap = document.createElement('div');
+    const head = document.createElement('div');
+    head.className = 'dp-cal-head';
+
+    const leftNav = document.createElement('button');
+    leftNav.type = 'button';
+    leftNav.className = 'dp-nav' + (showLeftNav ? '' : ' invisible');
+    leftNav.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>';
+    leftNav.onclick = () => { viewLeft = addMonths(viewLeft, -1); renderAll(); };
+
+    const title = document.createElement('div');
+    title.className = 'dp-cal-title';
+    title.textContent = MONTHS[month.getMonth()] + ' ' + month.getFullYear();
+
+    const rightNav = document.createElement('button');
+    rightNav.type = 'button';
+    rightNav.className = 'dp-nav' + (showRightNav ? '' : ' invisible');
+    rightNav.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>';
+    rightNav.onclick = () => { viewLeft = addMonths(viewLeft, 1); renderAll(); };
+
+    head.appendChild(leftNav); head.appendChild(title); head.appendChild(rightNav);
+    wrap.appendChild(head);
+
+    const grid = document.createElement('div');
+    grid.className = 'dp-cal-grid';
+    DOW.forEach(d => {
+      const el = document.createElement('div');
+      el.className = 'dp-dow'; el.textContent = d;
+      grid.appendChild(el);
+    });
+
+    const first = startOfMonth(month);
+    const firstDow = first.getDay();
+    const startCell = addDays(first, -firstDow);
+
+    for (let i = 0; i < 42; i++) {
+      const day = addDays(startCell, i);
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.className = 'dp-day';
+      btn.textContent = day.getDate();
+      const inMonth = day.getMonth() === month.getMonth();
+      if (!inMonth) btn.classList.add('outside');
+      if (eq(day, TODAY)) btn.classList.add('today');
+
+      const isStart = eq(day, draft.start);
+      const isEnd = eq(day, draft.end);
+
+      if (isStart && isEnd) btn.classList.add('range-single');
+      else if (isStart) btn.classList.add('range-start');
+      else if (isEnd) btn.classList.add('range-end');
+      else if (draft.start && draft.end && day > draft.start && day < draft.end) btn.classList.add('in-range');
+
+      btn.onclick = () => {
+        if (!pickingEnd) {
+          draft.start = ymd(day); draft.end = null; draft.presetId = null;
+          pickingEnd = true;
+        } else {
+          if (day < draft.start) { draft.end = draft.start; draft.start = ymd(day); }
+          else { draft.end = ymd(day); }
+          pickingEnd = false;
+          draft.presetId = null;
+        }
+        renderAll();
+      };
+      grid.appendChild(btn);
+    }
+
+    wrap.appendChild(grid);
+    return wrap;
+  }
+
+  function renderCalendars() {
+    calendarsEl.innerHTML = '';
+    calendarsEl.appendChild(renderCalendar(viewLeft, true, false));
+    calendarsEl.appendChild(renderCalendar(addMonths(viewLeft, 1), false, true));
+  }
+
+  function renderFooter() {
+    if (draft.start && draft.end) {
+      rangeTextEl.innerHTML = '<strong>' + fmt(draft.start) + '</strong> — <strong>' + fmt(draft.end) + '</strong>';
+      applyBtn.disabled = false; applyBtn.style.opacity = '1';
+    } else if (draft.start) {
+      rangeTextEl.innerHTML = '<strong>' + fmt(draft.start) + '</strong> — izaberi krajnji datum';
+      applyBtn.disabled = true; applyBtn.style.opacity = '0.5';
+    } else {
+      rangeTextEl.textContent = 'Izaberi datum';
+      applyBtn.disabled = true; applyBtn.style.opacity = '0.5';
+    }
+  }
+
+  function renderAll() { renderPresets(); renderToolbar(); renderCalendars(); renderFooter(); }
+
+  function updateTriggerLabel() {
+    let label;
+    if (committed.presetId) {
+      label = PRESETS.find(x => x.id === committed.presetId).label;
+    } else {
+      label = fmt(committed.start) + ' — ' + fmt(committed.end);
+    }
+    labelEl.textContent = label;
+    subtitleEl.textContent = label;
+  }
+
+  function open() {
+    draft = Object.assign({}, committed);
+    viewLeft = startOfMonth(draft.start);
+    pickingEnd = false;
+    popover.classList.add('open');
+    trigger.classList.add('open');
+    renderAll();
+  }
+  function close() {
+    popover.classList.remove('open');
+    trigger.classList.remove('open');
+  }
+
+  trigger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (popover.classList.contains('open')) close(); else open();
+  });
+  popover.addEventListener('click', (e) => e.stopPropagation());
+  document.addEventListener('click', () => close());
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  cancelBtn.addEventListener('click', close);
+  applyBtn.addEventListener('click', () => {
+    if (!draft.start || !draft.end) return;
+    committed = Object.assign({}, draft);
+    updateTriggerLabel();
+    close();
+    // TODO: re-fetch sales data with new date range when wired to Supabase
+  });
+
+  updateTriggerLabel();
+}
+
+// ============================================================
 // INIT
 // ============================================================
 document.getElementById('setter-date').max = todayISO();
+
+// Run welcome init on page load
+initWelcomeScreen();
 </script>
 </body>
 </html>
