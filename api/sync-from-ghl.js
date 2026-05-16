@@ -91,6 +91,12 @@ export default async function handler(req, res) {
     pipeline.stages.forEach(s => { stageNameById[s.id] = s.name; });
 
     // 2) Get last sync timestamp (max updated_at in our DB)
+    // First run mode: table is mostly empty (< 10 rows) → full backfill, no time filter.
+    const { count } = await supabase
+      .from('sales_opportunities')
+      .select('id', { count: 'exact', head: true });
+    const isFirstRun = (count ?? 0) < 10 || req.query.backfill === '1';
+
     const { data: lastRow } = await supabase
       .from('sales_opportunities')
       .select('updated_at')
@@ -118,8 +124,8 @@ export default async function handler(req, res) {
       // Transform each
       for (const opp of opps) {
         try {
-          // Skip if not updated since last sync (client-side filter as GHL doesn't always honor server-side)
-          if (opp.updatedAt && opp.updatedAt < sinceISO) continue;
+          // Backfill mode: process all. Otherwise filter by updatedAt.
+          if (!isFirstRun && opp.updatedAt && opp.updatedAt < sinceISO) continue;
 
           const stageName = stageNameById[opp.pipelineStageId] || '';
           const stageInfo = stageMap(stageName);
