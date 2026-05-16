@@ -1510,9 +1510,171 @@ tr:last-child td { border-bottom: none; }
   border-color: var(--primary-hover);
 }
 @media (max-width: 720px) {
-  .dp-popover { width: 360px; }
+  .dp-popover {
+    position: fixed !important;
+    top: auto !important;
+    right: 12px !important;
+    bottom: 12px !important;
+    left: 12px !important;
+    width: auto !important;
+    max-width: none !important;
+    max-height: calc(100vh - 24px);
+    overflow-y: auto;
+    z-index: 9999;
+    box-shadow: 0 -8px 40px rgba(16,26,36,0.25);
+  }
   .dp-presets { display: none; }
-  .dp-calendars { grid-template-columns: 1fr; }
+  .dp-calendars { grid-template-columns: 1fr; gap: 14px; padding: 12px; }
+  .dp-day { height: 38px; font-size: 13px; } /* bigger tap targets */
+  .dp-cal-head { margin-bottom: 6px; }
+  .dp-toolbar { padding: 12px 12px 4px; }
+  .dp-footer { padding: 12px; }
+}
+
+/* ============================================================
+   RESPONSIVE — Sales screen + general mobile polish
+   ============================================================ */
+
+/* Page title row: stack title + picker vertically on small screens */
+@media (max-width: 640px) {
+  .page-title-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 14px;
+  }
+  .page-title { font-size: 19px; }
+  .page-subtitle { font-size: 12px; }
+  .dp-trigger {
+    width: 100%;
+    justify-content: space-between;
+    padding: 12px 14px;
+  }
+  .dp-trigger > span:nth-child(2) {
+    flex: 1;
+    text-align: left;
+    margin-left: 4px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+/* Conversion bar stacks vertically on phone */
+@media (max-width: 600px) {
+  .sales-conv-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 14px 16px;
+  }
+  .sales-conv-left { width: 100%; }
+  .sales-conv-text { font-size: 12px; }
+  .sales-conv-text strong { font-size: 13px; }
+  .sales-conv-value { font-size: 24px; align-self: flex-end; }
+}
+
+/* KPI cards: tighter on phone */
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .kpi-card { padding: 14px 14px 16px; }
+  .kpi-value { font-size: 24px; }
+  .kpi-label { font-size: 10px; }
+  .kpi-sub { font-size: 11px; }
+}
+
+/* Package + reason rows: hide bar, keep count + name */
+@media (max-width: 600px) {
+  .pkg-bar-wrap, .reason-bar-wrap { display: none; }
+  .pkg-row { gap: 10px; }
+  .reason-row { gap: 10px; }
+  .pkg-stats { min-width: auto; }
+  .pkg-revenue { font-size: 11px; }
+  .pkg-name, .reason-name { font-size: 12px; }
+}
+
+/* Calls table — hide low-priority columns on small screens */
+.calls-table-wrap { overflow-x: hidden; }
+@media (max-width: 720px) {
+  /* hide Lost Reason column (col 6) on tablet & phone */
+  .sales-table th:nth-child(6), .sales-table td:nth-child(6) { display: none; }
+}
+@media (max-width: 540px) {
+  /* hide Package column (col 3) on small phone */
+  .sales-table th:nth-child(3), .sales-table td:nth-child(3) { display: none; }
+  .sales-table th, .sales-table td { padding: 10px 10px; font-size: 12px; }
+  .cell-revenue { font-size: 12px; }
+}
+@media (max-width: 380px) {
+  /* on tiny phones, hide Revenue too — leave Date/Lead/Status */
+  .sales-table th:nth-child(5), .sales-table td:nth-child(5) { display: none; }
+  .cell-sub { font-size: 10px; }
+}
+
+/* Calls table head: search input full width + refresh button stay inline */
+@media (max-width: 540px) {
+  .calls-table-head {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 14px 16px;
+  }
+  .calls-table-head > div:last-child {
+    display: flex;
+    gap: 8px;
+  }
+  .sales-search-input { flex: 1; width: auto; }
+}
+
+/* Pager wraps + tighter */
+@media (max-width: 540px) {
+  .sales-pager { flex-wrap: wrap; gap: 3px; justify-content: center; }
+  .sales-pager-btn { width: 26px; height: 26px; font-size: 11px; }
+  .sales-table-foot { padding: 12px 16px; flex-direction: column; gap: 10px; align-items: center; }
+}
+
+/* Sales section card padding tighter on phone */
+@media (max-width: 480px) {
+  .sales-section-card { padding: 16px; }
+  .sales-section-title { font-size: 14px; }
+  .sales-section-sub { font-size: 11px; }
+}
+
+/* Reasons footer wraps */
+@media (max-width: 540px) {
+  .reasons-footer { flex-direction: column; align-items: flex-start; gap: 6px; }
+  .reasons-footer-info { font-size: 11px; }
+  .reasons-footer-count { font-size: 11px; }
+}
+
+/* Sales screen header: hide brand text, just logo */
+@media (max-width: 540px) {
+  .header-brand em { display: none; }
+  .btn-switch-dept span { display: none; }
+  .btn-switch-dept { padding: 6px 8px; }
+}
+
+/* Sales content padding tighter on phone */
+@media (max-width: 480px) {
+  .sales-content { padding: 18px 14px 40px; }
+  .sales-grid-2 { gap: 12px; }
+}
+
+/* Department picker: tighter on phone */
+@media (max-width: 480px) {
+  .dept-card { padding: 28px 20px 22px; }
+  .dept-greeting { font-size: 22px; }
+  .dept-greeting-sub { font-size: 11px; }
+  .dept-btn { padding: 18px 16px; }
+  .dept-name { font-size: 14px; }
+  .dept-desc { font-size: 11px; line-height: 1.4; }
+}
+
+/* Welcome card: tighter on phone */
+@media (max-width: 420px) {
+  .welcome-card { padding: 32px 22px 26px; }
+  .welcome-greeting { font-size: 19px; }
+  .welcome-greeting-sub { font-size: 12px; }
+  .welcome-avatar { width: 64px; height: 64px; }
+  .welcome-pin { font-size: 22px; letter-spacing: 12px; padding: 14px; }
 }
 </style>
 </head>
