@@ -13,18 +13,31 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Marketing Pipeline stage → naš status mapping
-const STAGE_STATUS = {
-  'Registered':         { status: 'open',   isCall: false },
-  'Pozvati':            { status: 'open',   isCall: false },
-  'Call Booked':        { status: 'open',   isCall: true  },
-  'No-Show':            { status: 'noshow', isCall: true  },
-  'Follow Up':          { status: 'open',   isCall: true  },
-  'Porudžbine':         { status: 'won',    isCall: true  },
-  'Uplata na čekanju':  { status: 'won',    isCall: true  },
-  'Uplatio':            { status: 'won',    isCall: true  },
-  'Lost':               { status: 'lost',   isCall: true  },
-  'Junk':               { status: 'junk',   isCall: false }, // filtered out
+// Names normalized: lowercase, no diacritics, hyphens=spaces (matches what GHL sends)
+const STAGE_STATUS_RAW = {
+  'registered':         { status: 'open',   isCall: false },
+  'pozvati':            { status: 'open',   isCall: false },
+  'call booked':        { status: 'open',   isCall: true  },
+  'no show':            { status: 'noshow', isCall: true  },
+  'no-show':            { status: 'noshow', isCall: true  },
+  'follow up':          { status: 'open',   isCall: true  },
+  'porudzbine':         { status: 'won',    isCall: true  },
+  'uplata na cekanju':  { status: 'won',    isCall: true  },
+  'uplatio':            { status: 'won',    isCall: true  },
+  'lost':               { status: 'lost',   isCall: true  },
+  'junk':               { status: 'junk',   isCall: false },
 };
+function normalizeStage(s) {
+  if (!s) return '';
+  return String(s)
+    .toLowerCase()
+    .normalize('NFD').replace(/[̀-ͯ]/g, '') // strip diacritics
+    .replace(/đ/g, 'd').replace(/š/g, 's').replace(/č/g, 'c').replace(/ć/g, 'c').replace(/ž/g, 'z')
+    .replace(/\s+/g, ' ').trim();
+}
+function stageMap(s) {
+  return STAGE_STATUS_RAW[normalizeStage(s)] || { status: 'open', isCall: false };
+}
 
 // Fallback price by package (ako Vuksan nije manuelno uneo cenu)
 const DEFAULT_PRICE = {
@@ -114,10 +127,10 @@ export default async function handler(req, res) {
 
     // Resolve stage → status
     const stage = opp.pipelineStage || opp.pipeline_stage || opp.stage || opp.stageName;
-    const stageMap = STAGE_STATUS[stage] || { status: 'open', isCall: false };
+    const stageInfo = stageMap(stage);
 
     // Skip Junk entirely
-    if (stageMap.status === 'junk') {
+    if (stageInfo.status === 'junk') {
       await supabase.from('ghl_webhook_log').update({ status: 'skipped_junk' }).eq('id', logRow?.id);
       return res.status(200).json({ ok: true, skipped: 'junk' });
     }
@@ -143,16 +156,16 @@ export default async function handler(req, res) {
       lead_email:       opp.email || opp.contact?.email,
       salesman_name:    opp.assignedTo || opp.assigned_to || 'Vuksan',
       pipeline_stage:   stage,
-      status:           stageMap.status,
+      status:           stageInfo.status,
       package:          pkg,
       package_price:    price || null,
-      revenue:          stageMap.status === 'won' ? (price || 0) : null,
+      revenue:          stageInfo.status === 'won' ? (price || 0) : null,
       lost_reason:      lostNote,            // mapping: GHL "lost_note" → Supabase "lost_reason" kolona
       payment_method:   paymentMethod,
       sale_type:        saleType,
       scheduled_at:     opp.appointmentStartTime || opp.scheduled_at || null,
-      won_at:           stageMap.status === 'won'  ? now : null,
-      lost_at:          stageMap.status === 'lost' ? now : null,
+      won_at:           stageInfo.status === 'won'  ? now : null,
+      lost_at:          stageInfo.status === 'lost' ? now : null,
     };
 
     const { error } = await supabase
@@ -167,8 +180,8 @@ export default async function handler(req, res) {
       ok: true,
       opp_id: ghlOppId,
       stage,
-      status: stageMap.status,
-      is_call: stageMap.isCall,
+      status: stageInfo.status,
+      is_call: stageInfo.isCall,
     });
   } catch (err) {
     if (logRow?.id) {
