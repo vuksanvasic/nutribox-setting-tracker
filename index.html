@@ -1816,22 +1816,22 @@ tr:last-child td { border-bottom: none; }
     <div class="kpi-grid">
       <div class="kpi-card">
         <div class="kpi-label">Pozivi</div>
-        <div class="kpi-value">47</div>
-        <div class="kpi-sub"><strong>+12</strong> vs prošli period</div>
+        <div class="kpi-value" id="sales-kpi-pozivi">—</div>
+        <div class="kpi-sub" id="sales-kpi-pozivi-sub">u izabranom periodu</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">Zatvoreno</div>
-        <div class="kpi-value green">12</div>
-        <div class="kpi-sub"><strong>25.5%</strong> conversion</div>
+        <div class="kpi-value green" id="sales-kpi-won">—</div>
+        <div class="kpi-sub" id="sales-kpi-won-sub">conversion</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">Nije zatvoreno</div>
-        <div class="kpi-value danger">31</div>
-        <div class="kpi-sub"><strong>4</strong> no-show uračunato</div>
+        <div class="kpi-value danger" id="sales-kpi-lost">—</div>
+        <div class="kpi-sub" id="sales-kpi-lost-sub">no-show uračunato</div>
       </div>
       <div class="kpi-card">
         <div class="kpi-label">Prihod</div>
-        <div class="kpi-value green">674.000</div>
+        <div class="kpi-value green" id="sales-kpi-revenue">—</div>
         <div class="kpi-sub">RSD</div>
       </div>
     </div>
@@ -1846,10 +1846,10 @@ tr:last-child td { border-bottom: none; }
         </div>
         <div class="sales-conv-text">
           <strong>Conversion rate</strong>
-          12 zatvoreno od 47 poziva (no-show isključeni)
+          <span id="sales-conv-detail">—</span>
         </div>
       </div>
-      <div class="sales-conv-value">25.5%</div>
+      <div class="sales-conv-value" id="sales-conv-value">—</div>
     </div>
 
     <!-- Packages + Lost reasons -->
@@ -1859,41 +1859,12 @@ tr:last-child td { border-bottom: none; }
         <div class="sales-section-head">
           <div>
             <div class="sales-section-title">Prodaje po paketima</div>
-            <div class="sales-section-sub">12 zatvorenih · 674.000 RSD</div>
+            <div class="sales-section-sub" id="sales-packages-sub">—</div>
           </div>
         </div>
 
-        <div class="pkg-list">
-          <div class="pkg-row">
-            <div class="pkg-dot" style="background:#317039"></div>
-            <div class="pkg-info"><div class="pkg-name">28-dnevni</div><div class="pkg-price-label">78.400 RSD / kom</div></div>
-            <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:100%;background:#317039"></div></div>
-            <div class="pkg-stats"><div class="pkg-count">5</div><div class="pkg-revenue">392.000 RSD</div></div>
-          </div>
-          <div class="pkg-row">
-            <div class="pkg-dot" style="background:#4d9554"></div>
-            <div class="pkg-info"><div class="pkg-name">20-dnevni</div><div class="pkg-price-label">60.000 RSD / kom</div></div>
-            <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:60%;background:#4d9554"></div></div>
-            <div class="pkg-stats"><div class="pkg-count">3</div><div class="pkg-revenue">180.000 RSD</div></div>
-          </div>
-          <div class="pkg-row">
-            <div class="pkg-dot" style="background:#7eb085"></div>
-            <div class="pkg-info"><div class="pkg-name">7-dnevni</div><div class="pkg-price-label">21.000 RSD / kom</div></div>
-            <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:40%;background:#7eb085"></div></div>
-            <div class="pkg-stats"><div class="pkg-count">2</div><div class="pkg-revenue">42.000 RSD</div></div>
-          </div>
-          <div class="pkg-row">
-            <div class="pkg-dot" style="background:#a8c9ac"></div>
-            <div class="pkg-info"><div class="pkg-name">5-dnevni</div><div class="pkg-price-label">15.000 RSD / kom</div></div>
-            <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:20%;background:#a8c9ac"></div></div>
-            <div class="pkg-stats"><div class="pkg-count">1</div><div class="pkg-revenue">15.000 RSD</div></div>
-          </div>
-          <div class="pkg-row">
-            <div class="pkg-dot" style="background:#101a24"></div>
-            <div class="pkg-info"><div class="pkg-name">Custom</div><div class="pkg-price-label">manuelna cena</div></div>
-            <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:20%;background:#101a24"></div></div>
-            <div class="pkg-stats"><div class="pkg-count">1</div><div class="pkg-revenue">45.000 RSD</div></div>
-          </div>
+        <div class="pkg-list" id="sales-packages-list">
+          <div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">Učitavanje...</div>
         </div>
       </div>
 
@@ -1901,41 +1872,12 @@ tr:last-child td { border-bottom: none; }
         <div class="sales-section-head">
           <div>
             <div class="sales-section-title">Razlozi za lost</div>
-            <div class="sales-section-sub">31 lost · AI klasterovanje</div>
+            <div class="sales-section-sub" id="sales-reasons-sub">—</div>
           </div>
         </div>
 
-        <div class="reasons-wrap">
-          <div class="reason-row">
-            <div class="reason-icon-wrap" style="background:rgba(242,56,73,0.1);color:#f23849">💰</div>
-            <div class="reason-info"><div class="reason-name">Cena / budžet</div><div class="reason-pct">45%</div></div>
-            <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:100%;background:#f23849"></div></div>
-            <div class="reason-count">14</div>
-          </div>
-          <div class="reason-row">
-            <div class="reason-icon-wrap" style="background:rgba(245,166,35,0.12);color:#c98a0a">🤔</div>
-            <div class="reason-info"><div class="reason-name">Razmisliće</div><div class="reason-pct">26%</div></div>
-            <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:57%;background:#c98a0a"></div></div>
-            <div class="reason-count">8</div>
-          </div>
-          <div class="reason-row">
-            <div class="reason-icon-wrap" style="background:rgba(49,112,57,0.1);color:#317039">⏰</div>
-            <div class="reason-info"><div class="reason-name">Pogrešno vreme</div><div class="reason-pct">16%</div></div>
-            <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:36%;background:#317039"></div></div>
-            <div class="reason-count">5</div>
-          </div>
-          <div class="reason-row">
-            <div class="reason-icon-wrap" style="background:rgba(16,26,36,0.06);color:#101a24">👥</div>
-            <div class="reason-info"><div class="reason-name">Već ima coacha</div><div class="reason-pct">10%</div></div>
-            <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:21%;background:#101a24"></div></div>
-            <div class="reason-count">3</div>
-          </div>
-          <div class="reason-row">
-            <div class="reason-icon-wrap" style="background:rgba(16,26,36,0.04);color:rgba(16,26,36,0.4)">❓</div>
-            <div class="reason-info"><div class="reason-name">Ostalo</div><div class="reason-pct">3%</div></div>
-            <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:7%;background:rgba(16,26,36,0.3)"></div></div>
-            <div class="reason-count">1</div>
-          </div>
+        <div class="reasons-wrap" id="sales-reasons-list">
+          <div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">Učitavanje...</div>
         </div>
 
         <div class="reasons-footer">
@@ -1945,7 +1887,7 @@ tr:last-child td { border-bottom: none; }
             </div>
             <span>Svaki razlog je tekst koji prodavac ručno upiše posle poziva</span>
           </div>
-          <span class="reasons-footer-count">Prikazano 10 od 31</span>
+          <span class="reasons-footer-count" id="sales-reasons-count">—</span>
         </div>
       </div>
     </div>
@@ -1955,9 +1897,14 @@ tr:last-child td { border-bottom: none; }
       <div class="calls-table-head">
         <div>
           <div class="sales-section-title">Svi pozivi</div>
-          <div class="sales-section-sub">47 zapisa · klik na red za detalje</div>
+          <div class="sales-section-sub" id="sales-table-sub">—</div>
         </div>
-        <input class="sales-search-input" placeholder="Pretraga po imenu, telefonu…" />
+        <div style="display:flex;gap:8px;align-items:center;">
+          <button class="sales-pager-btn" id="sales-refresh-btn" style="width:auto;padding:6px 10px;" title="Osveži (povuci najnovije iz GHL-a)">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0114.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0020.49 15"/></svg>
+          </button>
+          <input class="sales-search-input" id="sales-search" placeholder="Pretraga po imenu, telefonu…" />
+        </div>
       </div>
 
       <table class="sales-table">
@@ -1966,36 +1913,19 @@ tr:last-child td { border-bottom: none; }
             <th>Datum</th><th>Lead</th><th>Paket</th><th>Status</th><th style="text-align:right;">Prihod</th><th>Razlog (lost)</th>
           </tr>
         </thead>
-        <tbody>
-          <tr><td><div class="cell-primary">15.05 14:00</div><div class="cell-sub">pre 2h</div></td><td><div class="cell-primary">Marko Jovanović</div><div class="cell-sub">+381 64 123 4567</div></td><td>28-dnevni</td><td><span class="sales-badge badge-won">Won</span></td><td class="cell-revenue">78.400 RSD</td><td class="cell-muted">—</td></tr>
-          <tr><td><div class="cell-primary">15.05 12:30</div><div class="cell-sub">pre 4h</div></td><td><div class="cell-primary">Ana Petrović</div><div class="cell-sub">+381 65 987 6543</div></td><td class="cell-muted">—</td><td><span class="sales-badge badge-lost">Lost</span></td><td class="cell-muted" style="text-align:right;">—</td><td class="cell-quote">"Skupo mi je trenutno, možda za par meseci"</td></tr>
-          <tr><td><div class="cell-primary">15.05 10:00</div><div class="cell-sub">pre 6h</div></td><td><div class="cell-primary">Stefan Nikolić</div><div class="cell-sub">+381 63 555 1234</div></td><td>Custom</td><td><span class="sales-badge badge-won">Won</span></td><td class="cell-revenue">45.000 RSD</td><td class="cell-muted">—</td></tr>
-          <tr><td><div class="cell-primary">14.05 16:00</div><div class="cell-sub">juče</div></td><td><div class="cell-primary">Jelena Marković</div><div class="cell-sub">+381 60 111 2233</div></td><td class="cell-muted">—</td><td><span class="sales-badge badge-noshow">No-show</span></td><td class="cell-muted" style="text-align:right;">—</td><td class="cell-muted">—</td></tr>
-          <tr><td><div class="cell-primary">14.05 11:00</div><div class="cell-sub">juče</div></td><td><div class="cell-primary">Nikola Tomić</div><div class="cell-sub">+381 64 888 9900</div></td><td>20-dnevni</td><td><span class="sales-badge badge-won">Won</span></td><td class="cell-revenue">60.000 RSD</td><td class="cell-muted">—</td></tr>
-          <tr><td><div class="cell-primary">13.05 17:30</div><div class="cell-sub">pre 2 dana</div></td><td><div class="cell-primary">Milica Stojanović</div><div class="cell-sub">+381 65 444 5566</div></td><td class="cell-muted">—</td><td><span class="sales-badge badge-lost">Lost</span></td><td class="cell-muted" style="text-align:right;">—</td><td class="cell-quote">"Već radim sa drugim nutricionistom"</td></tr>
-          <tr><td><div class="cell-primary">13.05 13:00</div><div class="cell-sub">pre 2 dana</div></td><td><div class="cell-primary">Petar Ilić</div><div class="cell-sub">+381 63 222 3344</div></td><td>7-dnevni</td><td><span class="sales-badge badge-won">Won</span></td><td class="cell-revenue">21.000 RSD</td><td class="cell-muted">—</td></tr>
-          <tr><td><div class="cell-primary">13.05 09:30</div><div class="cell-sub">pre 2 dana</div></td><td><div class="cell-primary">Tijana Đorđević</div><div class="cell-sub">+381 60 777 8899</div></td><td class="cell-muted">—</td><td><span class="sales-badge badge-lost">Lost</span></td><td class="cell-muted" style="text-align:right;">—</td><td class="cell-quote">"Suprug mi ne dozvoljava da trošim toliko"</td></tr>
-          <tr><td><div class="cell-primary">12.05 15:00</div><div class="cell-sub">pre 3 dana</div></td><td><div class="cell-primary">Aleksandar Pavlović</div><div class="cell-sub">+381 64 333 4455</div></td><td class="cell-muted">—</td><td><span class="sales-badge badge-pending">Awaiting</span></td><td class="cell-muted" style="text-align:right;">—</td><td class="cell-quote">razmisliće do kraja nedelje</td></tr>
-          <tr><td><div class="cell-primary">12.05 11:00</div><div class="cell-sub">pre 3 dana</div></td><td><div class="cell-primary">Sara Mihajlović</div><div class="cell-sub">+381 65 666 7788</div></td><td>28-dnevni</td><td><span class="sales-badge badge-won">Won</span></td><td class="cell-revenue">78.400 RSD</td><td class="cell-muted">—</td></tr>
+        <tbody id="sales-calls-tbody">
+          <tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">Učitavanje...</td></tr>
         </tbody>
       </table>
 
       <div class="sales-table-foot">
-        <div>Prikazano <strong>10</strong> od 47</div>
-        <div class="sales-pager">
-          <button class="sales-pager-btn" disabled>‹</button>
-          <button class="sales-pager-btn active">1</button>
-          <button class="sales-pager-btn">2</button>
-          <button class="sales-pager-btn">3</button>
-          <button class="sales-pager-btn">4</button>
-          <button class="sales-pager-btn">5</button>
-          <button class="sales-pager-btn">›</button>
-        </div>
+        <div id="sales-table-count">—</div>
+        <div class="sales-pager" id="sales-pager"></div>
       </div>
     </div>
 
-    <div class="sales-stub-note">
-      <strong>Demo podaci.</strong> Realna integracija sa GoHighLevel-om dolazi u sledećem koraku — webhook + Supabase schema su sledeći.
+    <div class="sales-stub-note" id="sales-sync-status" style="display:none;">
+      <strong>Status sync-a:</strong> <span id="sales-sync-info">—</span>
     </div>
 
   </div>
@@ -2793,6 +2723,13 @@ async function renderWeekly() {
 // SALES SCREEN
 // ============================================================
 let salesDatePickerInitialized = false;
+let salesCurrentRange = null;     // { start: Date, end: Date }
+let salesAllOpps = [];            // last fetched opps for current range
+let salesPage = 1;
+const SALES_PAGE_SIZE = 10;
+const SALES_API_BASE = (location.hostname === 'localhost' || location.hostname.startsWith('127.'))
+  ? 'https://nutribox-dashboard.vercel.app'
+  : '';
 
 function initSalesScreen() {
   // Header avatar + name
@@ -2809,11 +2746,302 @@ function initSalesScreen() {
   document.getElementById('sales-switch-dept').style.display =
     currentUser.departments.length > 1 ? '' : 'none';
 
-  // Init date picker once
+  // Init date picker once + render
   if (!salesDatePickerInitialized) {
     initSalesDatePicker();
     salesDatePickerInitialized = true;
+    initSalesEventHandlers();
   }
+
+  // Initial render with default range (last 30 days)
+  if (!salesCurrentRange) {
+    const today = new Date(); today.setHours(0,0,0,0);
+    const start = new Date(today); start.setDate(today.getDate() - 29);
+    salesCurrentRange = { start, end: today };
+  }
+  renderSalesData();
+}
+
+function initSalesEventHandlers() {
+  // Refresh button
+  document.getElementById('sales-refresh-btn').addEventListener('click', async () => {
+    const btn = document.getElementById('sales-refresh-btn');
+    btn.disabled = true;
+    btn.style.opacity = '0.5';
+    try {
+      // Trigger sync (best effort), then re-render
+      await fetch(`${SALES_API_BASE}/api/sync-from-ghl?secret=2b69a52f84a0e819e77b9af6f1737a079aab3c4fe0df9f46`, { method: 'POST' });
+    } catch (e) {
+      console.error('sync error', e);
+    }
+    btn.disabled = false;
+    btn.style.opacity = '1';
+    renderSalesData();
+  });
+
+  // Search input
+  document.getElementById('sales-search').addEventListener('input', () => {
+    salesPage = 1;
+    renderCallsTable();
+  });
+}
+
+// ============================================================
+// SALES DATA FETCH + RENDER
+// ============================================================
+async function renderSalesData() {
+  if (!salesCurrentRange) return;
+  const { start, end } = salesCurrentRange;
+  // end-of-day on the end date for inclusive range
+  const endISO = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 23, 59, 59, 999).toISOString();
+  const startISO = new Date(start.getFullYear(), start.getMonth(), start.getDate()).toISOString();
+
+  try {
+    const { data, error } = await sb
+      .from('sales_opportunities')
+      .select('*')
+      .eq('sale_type', 'Salesman')
+      .gte('updated_at', startISO)
+      .lte('updated_at', endISO)
+      .order('updated_at', { ascending: false });
+    if (error) throw error;
+    salesAllOpps = data || [];
+  } catch (e) {
+    console.error('renderSalesData failed', e);
+    salesAllOpps = [];
+  }
+
+  renderKPIs();
+  renderPackages();
+  renderReasons();
+  renderCallsTable();
+}
+
+function renderKPIs() {
+  const opps = salesAllOpps;
+  const calls = opps.filter(o => o.status !== 'open' || /call|follow|porud|uplat|uplat/i.test(o.pipeline_stage || ''));
+  const won = opps.filter(o => o.status === 'won');
+  const lost = opps.filter(o => o.status === 'lost');
+  const noshow = opps.filter(o => o.status === 'noshow');
+  const revenue = won.reduce((sum, o) => sum + (o.revenue || o.package_price || 0), 0);
+  const callsCount = calls.length;
+  const wonCount = won.length;
+  const convDen = callsCount - noshow.length;
+  const convRate = convDen > 0 ? Math.round((wonCount / convDen) * 1000) / 10 : 0;
+
+  document.getElementById('sales-kpi-pozivi').textContent = callsCount.toLocaleString('sr-RS');
+  document.getElementById('sales-kpi-pozivi-sub').textContent = `${opps.length} ukupno opp-ova`;
+
+  document.getElementById('sales-kpi-won').textContent = wonCount.toLocaleString('sr-RS');
+  document.getElementById('sales-kpi-won-sub').innerHTML = `<strong>${convRate}%</strong> conversion`;
+
+  document.getElementById('sales-kpi-lost').textContent = lost.length.toLocaleString('sr-RS');
+  document.getElementById('sales-kpi-lost-sub').innerHTML = `<strong>${noshow.length}</strong> no-show uračunato`;
+
+  document.getElementById('sales-kpi-revenue').textContent = revenue ? revenue.toLocaleString('sr-RS') : '0';
+
+  // Conversion bar
+  document.getElementById('sales-conv-value').textContent = `${convRate}%`;
+  document.getElementById('sales-conv-detail').textContent =
+    `${wonCount} zatvoreno od ${callsCount} poziva${noshow.length ? ` (${noshow.length} no-show isključeni)` : ''}`;
+}
+
+function renderPackages() {
+  const won = salesAllOpps.filter(o => o.status === 'won');
+  const byPackage = {};
+  won.forEach(o => {
+    const key = o.package || '(bez paketa)';
+    if (!byPackage[key]) byPackage[key] = { count: 0, revenue: 0 };
+    byPackage[key].count++;
+    byPackage[key].revenue += (o.revenue || o.package_price || 0);
+  });
+  const items = Object.entries(byPackage).sort((a,b) => b[1].count - a[1].count);
+  const maxCount = items[0]?.[1].count || 1;
+  const PRICES = { '28-dnevni': 78400, '20-dnevni': 60000, '7-dnevni': 21000, '5-dnevni': 15000, 'Custom': 'manuelno' };
+  const COLORS = ['#317039','#4d9554','#7eb085','#a8c9ac','#101a24','#6b6b80'];
+
+  const total = won.length;
+  const totalRev = items.reduce((s,[,v]) => s + v.revenue, 0);
+  document.getElementById('sales-packages-sub').textContent =
+    `${total} zatvorenih · ${totalRev.toLocaleString('sr-RS')} RSD`;
+
+  const listEl = document.getElementById('sales-packages-list');
+  if (!items.length) {
+    listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">Nema zatvorenih prodaja u izabranom periodu.</div>';
+    return;
+  }
+
+  listEl.innerHTML = items.map(([name, { count, revenue }], i) => {
+    const color = COLORS[i] || '#6b6b80';
+    const pct = Math.round((count / maxCount) * 100);
+    const priceLabel = typeof PRICES[name] === 'number' ? `${PRICES[name].toLocaleString('sr-RS')} RSD / kom` : (PRICES[name] || '—');
+    return `
+      <div class="pkg-row">
+        <div class="pkg-dot" style="background:${color}"></div>
+        <div class="pkg-info">
+          <div class="pkg-name">${escapeHtml(name)}</div>
+          <div class="pkg-price-label">${priceLabel}</div>
+        </div>
+        <div class="pkg-bar-wrap"><div class="pkg-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <div class="pkg-stats">
+          <div class="pkg-count">${count}</div>
+          <div class="pkg-revenue">${revenue.toLocaleString('sr-RS')} RSD</div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function renderReasons() {
+  const lostOpps = salesAllOpps.filter(o => o.status === 'lost');
+  const withReason = lostOpps.filter(o => o.lost_reason && o.lost_reason.trim());
+
+  // Naive grouping by first 30 chars normalized — placeholder for future LLM clustering
+  const byReason = {};
+  withReason.forEach(o => {
+    const txt = (o.lost_reason || '').trim();
+    const key = txt.toLowerCase().substring(0, 40);
+    if (!byReason[key]) byReason[key] = { count: 0, sample: txt };
+    byReason[key].count++;
+  });
+  const items = Object.entries(byReason).sort((a,b) => b[1].count - a[1].count).slice(0, 5);
+  const maxCount = items[0]?.[1].count || 1;
+  const ICONS = ['💰','🤔','⏰','👥','❓'];
+  const COLORS = ['#f23849','#c98a0a','#317039','#101a24','rgba(16,26,36,0.3)'];
+
+  document.getElementById('sales-reasons-sub').textContent =
+    `${lostOpps.length} lost · ${withReason.length} sa razlogom${withReason.length === 0 && lostOpps.length ? ' (nedostaju)' : ''}`;
+  document.getElementById('sales-reasons-count').textContent =
+    `Prikazano ${items.length} od ${lostOpps.length}`;
+
+  const listEl = document.getElementById('sales-reasons-list');
+  if (!items.length) {
+    listEl.innerHTML = '<div style="text-align:center;padding:24px;color:var(--text-muted);font-size:13px;">Nema upisanih razloga u izabranom periodu.</div>';
+    return;
+  }
+
+  listEl.innerHTML = items.map(([key, { count, sample }], i) => {
+    const icon = ICONS[i] || '•';
+    const color = COLORS[i] || '#101a24';
+    const pct = Math.round((count / maxCount) * 100);
+    const pctOfTotal = lostOpps.length ? Math.round((count / lostOpps.length) * 100) : 0;
+    return `
+      <div class="reason-row">
+        <div class="reason-icon-wrap" style="background:${hexToRgba(color, 0.1)};color:${color}">${icon}</div>
+        <div class="reason-info">
+          <div class="reason-name">${escapeHtml(sample.substring(0, 60))}${sample.length > 60 ? '…' : ''}</div>
+          <div class="reason-pct">${pctOfTotal}%</div>
+        </div>
+        <div class="reason-bar-wrap"><div class="reason-bar-fill" style="width:${pct}%;background:${color}"></div></div>
+        <div class="reason-count">${count}</div>
+      </div>`;
+  }).join('');
+}
+
+function renderCallsTable() {
+  const search = (document.getElementById('sales-search')?.value || '').toLowerCase().trim();
+  const filtered = search
+    ? salesAllOpps.filter(o =>
+        (o.lead_name || '').toLowerCase().includes(search) ||
+        (o.lead_phone || '').toLowerCase().includes(search) ||
+        (o.lead_email || '').toLowerCase().includes(search))
+    : salesAllOpps;
+
+  const totalPages = Math.max(1, Math.ceil(filtered.length / SALES_PAGE_SIZE));
+  salesPage = Math.min(salesPage, totalPages);
+  const offset = (salesPage - 1) * SALES_PAGE_SIZE;
+  const page = filtered.slice(offset, offset + SALES_PAGE_SIZE);
+
+  document.getElementById('sales-table-sub').textContent =
+    `${filtered.length} zapis${filtered.length === 1 ? '' : 'a'}${search ? ' (filtrirano)' : ''}`;
+  document.getElementById('sales-table-count').innerHTML =
+    `Prikazano <strong>${page.length}</strong> od ${filtered.length}`;
+
+  const tbody = document.getElementById('sales-calls-tbody');
+  if (!page.length) {
+    tbody.innerHTML = '<tr><td colspan="6" style="text-align:center;padding:32px;color:var(--text-muted);font-size:13px;">Nema rezultata.</td></tr>';
+  } else {
+    tbody.innerHTML = page.map(o => {
+      const date = o.updated_at ? new Date(o.updated_at) : null;
+      const dateStr = date ? `${String(date.getDate()).padStart(2,'0')}.${String(date.getMonth()+1).padStart(2,'0')} ${String(date.getHours()).padStart(2,'0')}:${String(date.getMinutes()).padStart(2,'0')}` : '—';
+      const ago = date ? timeAgo(date) : '';
+      const statusBadge = statusToBadge(o.status);
+      const revCell = (o.status === 'won' && (o.revenue || o.package_price))
+        ? `<td class="cell-revenue">${(o.revenue || o.package_price).toLocaleString('sr-RS')} RSD</td>`
+        : '<td class="cell-muted" style="text-align:right;">—</td>';
+      const reasonCell = o.lost_reason
+        ? `<td class="cell-quote">"${escapeHtml(o.lost_reason.substring(0, 80))}${o.lost_reason.length > 80 ? '…' : ''}"</td>`
+        : '<td class="cell-muted">—</td>';
+      return `
+        <tr>
+          <td><div class="cell-primary">${dateStr}</div><div class="cell-sub">${ago}</div></td>
+          <td><div class="cell-primary">${escapeHtml(o.lead_name || '—')}</div><div class="cell-sub">${escapeHtml(o.lead_phone || o.lead_email || '')}</div></td>
+          <td>${o.package ? escapeHtml(o.package) : '<span class="cell-muted">—</span>'}</td>
+          <td>${statusBadge}</td>
+          ${revCell}
+          ${reasonCell}
+        </tr>`;
+    }).join('');
+  }
+
+  // Pager
+  const pager = document.getElementById('sales-pager');
+  if (totalPages <= 1) {
+    pager.innerHTML = '';
+  } else {
+    const pages = [];
+    pages.push(`<button class="sales-pager-btn" ${salesPage === 1 ? 'disabled' : ''} onclick="salesGoToPage(${salesPage - 1})">‹</button>`);
+    const maxShow = 5;
+    let p1 = Math.max(1, salesPage - 2);
+    let p2 = Math.min(totalPages, p1 + maxShow - 1);
+    if (p2 - p1 < maxShow - 1) p1 = Math.max(1, p2 - maxShow + 1);
+    for (let p = p1; p <= p2; p++) {
+      pages.push(`<button class="sales-pager-btn ${p === salesPage ? 'active' : ''}" onclick="salesGoToPage(${p})">${p}</button>`);
+    }
+    pages.push(`<button class="sales-pager-btn" ${salesPage === totalPages ? 'disabled' : ''} onclick="salesGoToPage(${salesPage + 1})">›</button>`);
+    pager.innerHTML = pages.join('');
+  }
+}
+
+function salesGoToPage(n) {
+  salesPage = n;
+  renderCallsTable();
+}
+
+function statusToBadge(status) {
+  switch (status) {
+    case 'won':  return '<span class="sales-badge badge-won">Won</span>';
+    case 'lost': return '<span class="sales-badge badge-lost">Lost</span>';
+    case 'noshow': return '<span class="sales-badge badge-noshow">No-show</span>';
+    default: return '<span class="sales-badge badge-pending">Open</span>';
+  }
+}
+
+function escapeHtml(s) {
+  if (s == null) return '';
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function hexToRgba(c, a) {
+  if (c.startsWith('rgba')) return c;
+  if (c.startsWith('rgb')) return c.replace('rgb(','rgba(').replace(')',`,${a})`);
+  const m = c.replace('#','').match(/(.{2})(.{2})(.{2})/);
+  if (!m) return c;
+  return `rgba(${parseInt(m[1],16)},${parseInt(m[2],16)},${parseInt(m[3],16)},${a})`;
+}
+
+function timeAgo(d) {
+  const sec = Math.round((Date.now() - d.getTime()) / 1000);
+  if (sec < 60) return 'upravo sad';
+  const min = Math.round(sec / 60);
+  if (min < 60) return `pre ${min} min`;
+  const h = Math.round(min / 60);
+  if (h < 24) return `pre ${h}h`;
+  const days = Math.round(h / 24);
+  if (days === 1) return 'juče';
+  if (days < 7) return `pre ${days} dana`;
+  const weeks = Math.round(days / 7);
+  if (weeks < 5) return `pre ${weeks} ${weeks === 1 ? 'nedelju' : 'nedelje'}`;
+  return d.toLocaleDateString('sr-RS');
 }
 
 // ============================================================
@@ -3034,8 +3262,14 @@ function initSalesDatePicker() {
     committed = Object.assign({}, draft);
     updateTriggerLabel();
     close();
-    // TODO: re-fetch sales data with new date range when wired to Supabase
+    // Push new range to global state + re-render sales data
+    salesCurrentRange = { start: committed.start, end: committed.end };
+    salesPage = 1;
+    if (typeof renderSalesData === 'function') renderSalesData();
   });
+
+  // Initial: push initial range to global state
+  salesCurrentRange = { start: committed.start, end: committed.end };
 
   updateTriggerLabel();
 }
