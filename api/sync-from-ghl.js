@@ -140,7 +140,10 @@ export default async function handler(req, res) {
           let   price          = parseInt(cfValue(opp.customFields, 'package_price'), 10);
           const paymentMethod  = cfValue(opp.customFields, 'payment_method');
           const saleType       = cfValue(opp.customFields, 'sale_type') || 'Salesman';
+
+          // Fallbacks: built-in monetaryValue field, default by package name
           if (!price && pkg && DEFAULT_PRICE[pkg] != null) price = DEFAULT_PRICE[pkg];
+          if (!price && opp.monetaryValue) price = Math.round(parseFloat(opp.monetaryValue));
 
           const now = new Date().toISOString();
           rowsToUpsert.push({
